@@ -2,6 +2,22 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./modules/burgerMenu.js":
+/*!*******************************!*\
+  !*** ./modules/burgerMenu.js ***!
+  \*******************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
+/* harmony export */ });
+var burgerMenu = function burgerMenu() {};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (burgerMenu);
+
+/***/ }),
+
 /***/ "./modules/headerContactsAccord.js":
 /*!*****************************************!*\
   !*** ./modules/headerContactsAccord.js ***!
@@ -105,10 +121,14 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _css_style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./css/style.css */ "./css/style.css");
 /* harmony import */ var _modules_headerContactsAccord__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/headerContactsAccord */ "./modules/headerContactsAccord.js");
+/* harmony import */ var _modules_burgerMenu__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/burgerMenu */ "./modules/burgerMenu.js");
+
 
  // Phone List Active
 
-(0,_modules_headerContactsAccord__WEBPACK_IMPORTED_MODULE_1__["default"])();
+(0,_modules_headerContactsAccord__WEBPACK_IMPORTED_MODULE_1__["default"])(); // Burger Menu
+
+(0,_modules_burgerMenu__WEBPACK_IMPORTED_MODULE_2__["default"])();
 }();
 /******/ })()
 ;
