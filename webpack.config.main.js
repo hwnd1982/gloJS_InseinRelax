@@ -94,12 +94,10 @@ module.exports = {
   devServer: {
     static: {
       directory: path.join(__dirname, "build"),
-      publicPath: "/serve-public-path-url",
     },
     open: true,
     port: 9000,
     hot: true,
-    compress: true,
     historyApiFallback: true,
   },
   devtool: isDev && "source-map",

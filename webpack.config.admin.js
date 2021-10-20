@@ -102,7 +102,6 @@ module.exports = {
     open: true,
     port: 9000,
     hot: true,
-    compress: true,
     historyApiFallback: true,
   },
   devtool: isDev && "source-map",

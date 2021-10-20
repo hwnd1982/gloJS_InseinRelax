@@ -1,3 +1,5 @@
 import "./css/style.css";
+import headerContactsAccord from "./modules/headerContactsAccord";
 
-console.log("main");
+// Phone List Active
+headerContactsAccord();
