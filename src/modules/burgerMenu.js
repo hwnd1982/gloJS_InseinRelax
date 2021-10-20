@@ -15,7 +15,6 @@ const
     const popupDialogMenu = document.querySelector('.popup-dialog-menu');
 
     window.addEventListener('resize', () => {
-      console.log(popupDialogMenu.style.transform);
       if (popupDialogMenu.style.transform !== 'translate3d(0px, 0px, 0px)') {
         popupDialogMenu.parentElement.append(popupDialogMenu);
         screen.width > 576 ?
