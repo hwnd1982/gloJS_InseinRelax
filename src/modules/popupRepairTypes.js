@@ -7,7 +7,7 @@ const popupRepairTypes = () => {
     if (target.matches('.link-list>a')) {
       popup.style.visibility = 'visible';
     }
-    if (target.matches('.popup-repair-types>.close')) {
+    if (target.matches('.close') && target.closest('.popup-repair-types')) {
       popup.style.visibility = 'hidden';
     }
   });

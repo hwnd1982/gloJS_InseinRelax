@@ -173,7 +173,7 @@ var popupRepairTypes = function popupRepairTypes() {
       popup.style.visibility = 'visible';
     }
 
-    if (target.matches('.popup-repair-types>.close')) {
+    if (target.matches('.close') && target.closest('.popup-repair-types')) {
       popup.style.visibility = 'hidden';
     }
   });
