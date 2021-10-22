@@ -9,6 +9,7 @@ import { addHighlightStyle, removeHighlightStyle } from './modules/formulaPopupS
 import sendForm from './modules/sendForm';
 import { errorMassage, loadMessage } from './modules/messageSendForm';
 import successMessage from './modules/successMessage';
+import faqAccordion from './modules/faqAccordion';
 
 // Phone List Active
 headerContactsAccord();
@@ -40,5 +41,7 @@ const formulaSlider = new SliderCarousel({
   ]
 });
 formulaSlider.init();
-//
+// Send Form
 sendForm(loadMessage, successMessage, errorMassage);
+// FAQ Accordion (undefined: Maximize & Minimize All, true: Single Minimize All, false: Single)
+faqAccordion(false);

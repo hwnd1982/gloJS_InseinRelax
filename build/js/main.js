@@ -433,6 +433,40 @@ var smoothScrollOfLink = function smoothScrollOfLink(event) {
 
 /***/ }),
 
+/***/ "./modules/faqAccordion.js":
+/*!*********************************!*\
+  !*** ./modules/faqAccordion.js ***!
+  \*********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
+/* harmony export */ });
+var faqAccordion = function faqAccordion(minimizeAll) {
+  var accordion = document.querySelector('.accordion');
+  accordion.addEventListener('click', function (_ref) {
+    var target = _ref.target;
+
+    if (target.matches('.title_block')) {
+      if (minimizeAll === undefined) {
+        target.classList.toggle('msg-active');
+      } else {
+        var active = accordion.querySelector('.msg-active');
+        if (active) active.classList.remove('msg-active');
+
+        if (!(minimizeAll && active === target)) {
+          target.classList.add('msg-active');
+        }
+      }
+    }
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (faqAccordion);
+
+/***/ }),
+
 /***/ "./modules/formulaPopupDesktop.js":
 /*!****************************************!*\
   !*** ./modules/formulaPopupDesktop.js ***!
@@ -657,6 +691,10 @@ var popupControl = function popupControl() {
       document.querySelector('.popup-privacy').style.visibility = 'visible';
     }
 
+    if (target.matches('.button_wide')) {
+      document.querySelector('.popup-consultation').style.visibility = 'visible';
+    }
+
     if (target.matches('.close') && target.closest('.popup')) {
       var popup = target.closest('.popup');
       if (!popup.matches('.popup-dialog-menu')) popup.style.visibility = 'hidden';
@@ -786,7 +824,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
 /* harmony export */ });
 var successMessage = function successMessage() {
-  document.querySelector('.popup-thank').style.cssText = 'visibility: visible';
+  document.querySelector('.popup-thank').style.visibility = 'visible';
+  document.querySelector('.popup-consultation').style.visibility = 'hidden';
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (successMessage);
@@ -879,6 +918,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_sendForm__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/sendForm */ "./modules/sendForm.js");
 /* harmony import */ var _modules_messageSendForm__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modules/messageSendForm */ "./modules/messageSendForm.js");
 /* harmony import */ var _modules_successMessage__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./modules/successMessage */ "./modules/successMessage.js");
+/* harmony import */ var _modules_faqAccordion__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./modules/faqAccordion */ "./modules/faqAccordion.js");
+
 
 
 
@@ -917,9 +958,11 @@ var formulaSlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["de
     slidesToShow: 1
   }]
 });
-formulaSlider.init(); //
+formulaSlider.init(); // Send Form
 
-(0,_modules_sendForm__WEBPACK_IMPORTED_MODULE_8__["default"])(_modules_messageSendForm__WEBPACK_IMPORTED_MODULE_9__.loadMessage, _modules_successMessage__WEBPACK_IMPORTED_MODULE_10__["default"], _modules_messageSendForm__WEBPACK_IMPORTED_MODULE_9__.errorMassage);
+(0,_modules_sendForm__WEBPACK_IMPORTED_MODULE_8__["default"])(_modules_messageSendForm__WEBPACK_IMPORTED_MODULE_9__.loadMessage, _modules_successMessage__WEBPACK_IMPORTED_MODULE_10__["default"], _modules_messageSendForm__WEBPACK_IMPORTED_MODULE_9__.errorMassage); // FAQ Accordion (undefined: Maximize & Minimize All, true: Single Minimize All, false: Single)
+
+(0,_modules_faqAccordion__WEBPACK_IMPORTED_MODULE_11__["default"])(false);
 }();
 /******/ })()
 ;

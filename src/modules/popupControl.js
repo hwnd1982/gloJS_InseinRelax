@@ -6,6 +6,9 @@ const popupControl = () => {
     if (target.matches('.link-privacy')) {
       document.querySelector('.popup-privacy').style.visibility = 'visible';
     }
+    if (target.matches('.button_wide')) {
+      document.querySelector('.popup-consultation').style.visibility = 'visible';
+    }
     if (target.matches('.close') && target.closest('.popup')) {
       const popup = target.closest('.popup');
       if (!popup.matches('.popup-dialog-menu'))
