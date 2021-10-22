@@ -342,6 +342,13 @@ class SliderCarousel {
           this.addStyle();
         }
         this.setStartPosition();
+
+        if (this.options.showCenter) {
+          this.slides.master.forEach(this.options.showCenter[1]);
+          this.slides.slave.forEach(this.options.showCenter[1]);
+          this.options.showCenter[0](this.getCenterElem());
+        }
+
         this.main.prepend(this.wrap.slave);
         this.main.prepend(this.wrap.master);
         if (this.options.autoplay) {

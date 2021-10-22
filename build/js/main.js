@@ -346,6 +346,14 @@ var SliderCarousel = /*#__PURE__*/function () {
 
         _this5.setStartPosition();
 
+        if (_this5.options.showCenter) {
+          _this5.slides.master.forEach(_this5.options.showCenter[1]);
+
+          _this5.slides.slave.forEach(_this5.options.showCenter[1]);
+
+          _this5.options.showCenter[0](_this5.getCenterElem());
+        }
+
         _this5.main.prepend(_this5.wrap.slave);
 
         _this5.main.prepend(_this5.wrap.master);
