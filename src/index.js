@@ -45,3 +45,15 @@ formulaSlider.init();
 sendForm(loadMessage, successMessage, errorMassage);
 // FAQ Accordion (undefined: Maximize & Minimize All, true: Single Minimize All, false: Single)
 faqAccordion(false);
+// Reviews Slider
+const reviewsSlider = new SliderCarousel({
+  main: '#reviews-slider',
+  wrap: '.reviews-slider',
+  prev: '#reviews-arrow_left',
+  next: '#reviews-arrow_right',
+  dotsList: '.slider-dots-reviews',
+  position: 1,
+  pagination: true,
+  slidesToShow: 1,
+});
+reviewsSlider.init();

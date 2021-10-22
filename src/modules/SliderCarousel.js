@@ -7,8 +7,9 @@ class SliderCarousel {
     slide,
     loop = false,
     pagination = false,
+    dotsList,
     position = 0,
-    showCenter = [],
+    showCenter = false,
     autoplay = false,
     time = 3000,
     slidesToShow = 3,
@@ -18,32 +19,33 @@ class SliderCarousel {
 
     this.example = 1;
     this.main = document.querySelector(main);
-    this.wrap = {
+    this.wrap = loop ? {
       master: wrapElem,
       slave: wrapElem.cloneNode(true)
-    };
+    } : wrapElem;
     this.next = document.querySelector(next);
     this.prev = document.querySelector(prev);
-    this.dots = [];
+    this.dotsList = document.querySelector(dotsList);
+    this.dots = this.dotsList ? [...this.dotsList.children] : [];
     this.slidesToShow = slidesToShow;
     this.interval = 0,
     this.responsive = responsive;
-    this.slides = {
+    this.slides = loop ? {
       master: slide ? [...this.wrap.master.querySelectorAll(slide)] : [...this.wrap.master.children],
       slave: slide ? [...this.wrap.slave.querySelectorAll(slide)] : [...this.wrap.slave.children]
-    };
+    } : slide ? [...this.wrap.master.querySelectorAll(slide)] : [...this.wrap.children];
     this.options = {
-      position: {
+      position: loop ? {
         master: position,
         slave: this.slides.master.length + position
-      },
+      } : position,
       showCenter,
       loop,
       pagination,
-      autoplay,
+      autoplay: loop ? autoplay : loop,
       time,
       widthSlide: Math.floor(100 / this.slidesToShow),
-      maxPosition: this.slides.master.length - this.slidesToShow
+      maxPosition: (loop ? this.slides.master.length : this.slides.length) - this.slidesToShow
     };
   }
   init() {
@@ -53,17 +55,17 @@ class SliderCarousel {
     }
     this.addGloClass();
     this.addStyle();
-    if (this.options.pagination) {
+    if (this.options.pagination)
       this.dots.push(...this.addPagination());
-    }
     this.controlSlider();
-    this.main.insertBefore(this.wrap.slave, this.wrap.master.nextElementSibling);
+    if (this.options.loop)
+      this.main.insertBefore(this.wrap.slave, this.wrap.master.nextElementSibling);
     if (this.options.autoplay) {
       this.startSlider();
       this.main.addEventListener('mouseover', event =>
         (event.target.matches(`.glo-${this.example}-slider__buttons, .dot`) ? this.stopSlider() : null));
       this.main.addEventListener('mouseout', event =>
-        (event.target.matches(`.glo-${this.example}-slider__buttons, .dot`) ? this.startSlider(event) : null));
+        (event.target.matches(`.glo-${this.example}-slider__buttons, .dot`) ? this.startSlider() : null));
     }
     if (this.responsive) this.responsiveInit();
     this.setStartPosition();
@@ -81,27 +83,41 @@ class SliderCarousel {
     clearInterval(this.interval);
   }
   setStartPosition() {
-    if (this.options.position.master >= 2 * this.slides.master.length - this.slidesToShow - 1) {
-      this.main.prepend(this.wrap.master);
-      this.options.position.master = -this.slidesToShow -
+    if (this.options.loop) {
+      if (this.options.position.master >= 2 * this.slides.master.length - this.slidesToShow - 1) {
+        this.main.prepend(this.wrap.master);
+        this.options.position.master = -this.slidesToShow -
         (2 * this.slides.master.length - this.slidesToShow - this.options.position.master);
-    }
-    if (this.options.position.master <= -this.slides.master.length + 1) {
-      this.main.prepend(this.wrap.master);
-      this.options.position.master = this.slides.master.length +
+      }
+      if (this.options.position.master <= -this.slides.master.length + 1) {
+        this.main.prepend(this.wrap.master);
+        this.options.position.master = this.slides.master.length +
         (this.slides.master.length + this.options.position.master);
+      }
+      this.wrap.master.style.transform = `translateX(${-this.options.widthSlide * this.options.position.master}%)`;
+      this.wrap.slave.style.transform = `translateX(${-this.options.widthSlide * this.options.position.slave}%)`;
+    } else {
+      if (this.options.position === 0) this.prev.style.display = 'none';
+      else this.prev.style.display = 'flex';
+      if (this.options.position === this.slides.length - this.slidesToShow) this.next.style.display = 'none';
+      else this.next.style.display = 'flex';
+      this.wrap.style.transform = `translateX(${-this.options.widthSlide * this.options.position}%)`;
     }
-    this.wrap.master.style.transform = `translateX(${-this.options.widthSlide * this.options.position.master}%)`;
-    this.wrap.slave.style.transform = `translateX(${-this.options.widthSlide * this.options.position.slave}%)`;
   }
   addGloClass() {
     this.main.classList.add(`glo-${this.example}-slider`);
-    this.wrap.master.classList.add(`glo-${this.example}-slider__wrap`);
-    this.wrap.master.classList.add(`glo-${this.example}-slider__wrap_master`);
-    this.wrap.slave.classList.add(`glo-${this.example}-slider__wrap`);
-    this.wrap.slave.classList.add(`glo-${this.example}-slider__wrap_slave`);
-    this.slides.master.forEach(item => item.classList.add(`glo-${this.example}-slider__item`));
-    this.slides.slave.forEach(item => item.classList.add(`glo-${this.example}-slider__item`));
+    if (this.options.loop) {
+      this.wrap.master.classList.add(`glo-${this.example}-slider__wrap`);
+      this.wrap.master.classList.add(`glo-${this.example}-slider__wrap_master`);
+      this.wrap.slave.classList.add(`glo-${this.example}-slider__wrap`);
+      this.wrap.slave.classList.add(`glo-${this.example}-slider__wrap_slave`);
+      this.slides.master.forEach(item => item.classList.add(`glo-${this.example}-slider__item`));
+      this.slides.slave.forEach(item => item.classList.add(`glo-${this.example}-slider__item`));
+    } else {
+      this.wrap.classList.add(`glo-${this.example}-slider__wrap`);
+      this.wrap.classList.add(`glo-${this.example}-slider__wrap_master`);
+      this.slides.forEach(item => item.classList.add(`glo-${this.example}-slider__item`));
+    }
     this.prev.classList.add(`glo-${this.example}-slider__buttons`);
     this.next.classList.add(`glo-${this.example}-slider__buttons`);
   }
@@ -121,6 +137,7 @@ class SliderCarousel {
           width: 100% !important;
           transition: transform 0.5s !important;
           will-change: transform !important;
+          overflow: initial !important;
         }
         .glo-${this.example}-slider__wrap.glo-${this.example}-slider__wrap_slave {
           position: absolute !important;
@@ -220,63 +237,78 @@ class SliderCarousel {
     this.next.addEventListener('click', event => this.nextSlide(event));
   }
   getCenterElem() {
-    return this.options.position.master >= -Math.floor(this.slidesToShow / 2) &&
+    return this.options.loop ? (this.options.position.master >= -Math.floor(this.slidesToShow / 2) &&
       this.options.position.master < this.slides.master.length - Math.floor(this.slidesToShow / 2) ?
       this.slides.master[this.options.position.master + Math.floor(this.slidesToShow / 2)] :
-      this.slides.slave[this.options.position.slave + Math.floor(this.slidesToShow / 2)];
-  }
-  highlightCentralElement() {
-    const
-      elem = this.getCenterElem(),
-      item = elem.closest('.formula-item__icon'),
-      slide = elem.closest('.formula-slider__slide');
-    console.log(item, slide);
+      this.slides.slave[this.options.position.slave + Math.floor(this.slidesToShow / 2)]) :
+      this.slides[this.options.position + Math.floor(this.slidesToShow / 2)];
   }
   nextSlide(event) {
     event ? event.preventDefault() : null;
 
     if (this.options.pagination) this.changeDot(false);
     if (this.options.showCenter) this.options.showCenter[1](this.getCenterElem());
-    ++this.options.position.master;
-    ++this.options.position.slave;
-    if (this.options.position.master >= 2 * this.slides.master.length - this.slidesToShow - 1) {
-      this.main.prepend(this.wrap.master);
-      this.options.position.master = -this.slidesToShow -
+    if (this.options.loop) {
+      ++this.options.position.master;
+      ++this.options.position.slave;
+      if (this.options.position.master >= 2 * this.slides.master.length - this.slidesToShow - 1) {
+        this.main.prepend(this.wrap.master);
+        this.options.position.master = -this.slidesToShow -
         (2 * this.slides.master.length - this.slidesToShow - this.options.position.master);
-    }
-    if (this.options.position.slave >= 2 * this.slides.slave.length - this.slidesToShow - 1) {
-      this.main.prepend(this.wrap.slave);
-      this.options.position.slave = -this.slidesToShow -
+      }
+      if (this.options.position.slave >= 2 * this.slides.slave.length - this.slidesToShow - 1) {
+        this.main.prepend(this.wrap.slave);
+        this.options.position.slave = -this.slidesToShow -
         (2 * this.slides.slave.length - this.slidesToShow - this.options.position.slave);
+      }
+      this.wrap.master.style.transform = `translateX(${-this.options.widthSlide * this.options.position.master}%)`;
+      this.wrap.slave.style.transform = `translateX(${-this.options.widthSlide * this.options.position.slave}%)`;
+    } else {
+      if (this.options.position <= this.slides.length - this.slidesToShow) {
+        ++this.options.position;
+        this.wrap.style.transform = `translateX(${-this.options.widthSlide * this.options.position}%)`;
+        if (this.options.position > 0 && this.prev.style.display === 'none') this.prev.style.display = 'flex';
+        if (this.options.position === this.slides.length - this.slidesToShow) this.next.style.display = 'none';
+      }
     }
-    this.wrap.master.style.transform = `translateX(${-this.options.widthSlide * this.options.position.master}%)`;
-    this.wrap.slave.style.transform = `translateX(${-this.options.widthSlide * this.options.position.slave}%)`;
     if (this.options.showCenter) this.options.showCenter[0](this.getCenterElem());
     if (this.options.pagination) this.changeDot(true);
   }
   changeDot(add) {
-    this.dots[this.options.position.master >= 0 && this.options.position.master < this.slides.master.length ?
-      this.options.position.master : this.options.position.slave].classList[add ? 'add' : 'remove']('dot-active');
+    if (this.options.loop)
+      this.dots[this.options.position.master >= 0 && this.options.position.master < this.slides.master.length ?
+        this.options.position.master : this.options.position.slave].classList[add ? 'add' : 'remove']('dot_active');
+    else this.dots[this.options.position].classList[add ? 'add' : 'remove']('dot_active');
   }
   prevSlide(event) {
     event ? event.preventDefault() : null;
 
     if (this.options.pagination) this.changeDot(false);
     if (this.options.showCenter) this.options.showCenter[1](this.getCenterElem());
-    --this.options.position.master;
-    --this.options.position.slave;
-    if (this.options.position.master <= -this.slides.master.length + 1) {
-      this.main.prepend(this.wrap.master);
-      this.options.position.master = this.slides.master.length +
+    if (this.options.loop) {
+      --this.options.position.master;
+      --this.options.position.slave;
+      if (this.options.position.master <= -this.slides.master.length + 1) {
+        this.main.prepend(this.wrap.master);
+        this.options.position.master = this.slides.master.length +
         (this.slides.master.length + this.options.position.master);
-    }
-    if (this.options.position.slave <= -this.slides.slave.length + 1) {
-      this.main.prepend(this.wrap.slave);
-      this.options.position.slave = this.slides.master.length +
+      }
+      if (this.options.position.slave <= -this.slides.slave.length + 1) {
+        this.main.prepend(this.wrap.slave);
+        this.options.position.slave = this.slides.master.length +
         (this.slides.slave.length + this.options.position.slave);
+      }
+      this.wrap.master.style.transform = `translateX(${-this.options.widthSlide * this.options.position.master}%)`;
+      this.wrap.slave.style.transform = `translateX(${-this.options.widthSlide * this.options.position.slave}%)`;
+    } else {
+      if (this.options.position >= 0) {
+        --this.options.position;
+        this.wrap.style.transform = `translateX(${-this.options.widthSlide * this.options.position}%)`;
+        if (this.options.position < this.slides.length - this.slidesToShow && this.next.style.display === 'none')
+          this.next.style.display = 'flex';
+        if (this.options.position === 0) this.prev.style.display = 'none';
+      }
     }
-    this.wrap.master.style.transform = `translateX(${-this.options.widthSlide * this.options.position.master}%)`;
-    this.wrap.slave.style.transform = `translateX(${-this.options.widthSlide * this.options.position.slave}%)`;
     if (this.options.showCenter) this.options.showCenter[0](this.getCenterElem());
     if (this.options.pagination) this.changeDot(true);
   }
@@ -289,29 +321,43 @@ class SliderCarousel {
     this.main.append(this.next);
   }
   addPagination() {
-    const dotsList = this.main.appendChild(document.createElement('ul'));
+    const dotsList = this.dotsList || this.main.appendChild(document.createElement('div'));
 
-    dotsList.classList.add(`glo-${this.example}-slider__dots`);
-    this.slides.master.forEach((elem, index) =>
-      (dotsList.innerHTML += `<li class="dot${index === this.options.position.master ?
-        ' dot-active' : ''}" id="dot${index}""></li>`));
-
+    if (!dotsList.className) {
+      dotsList.classList.add(`glo-${this.example}-slider__dots`);
+      this.slides.master.forEach((elem, index) =>
+        (dotsList.innerHTML += `<li class="dot${index === this.options.position.master ?
+          ' dot_active' : ''}" id="dot${index}""></li>`));
+    } else {
+      dotsList.style.display = 'flex';
+      [...dotsList.children].forEach((item, index) => {
+        item.id = `dot${index}`;
+        item.classList.remove('dot_active');
+      });
+      this.changeDot(true);
+    }
     dotsList.addEventListener('click',  event => {
       if (!event.target.matches('.dot')) {
         return;
       }
-      const delta = this.options.position.master >= 0 && this.options.position.master < this.slides.master.length ?
-        +event.target.id.slice(3) - this.options.position.master :
-        +event.target.id.slice(3) - this.options.position.slave;
+      const delta = this.options.loop ?
+        (this.options.position.master >= 0 && this.options.position.master < this.slides.master.length ?
+          +event.target.id.slice(3) - this.options.position.master :
+          +event.target.id.slice(3) - this.options.position.slave) :
+        +event.target.id.slice(3) - this.options.position;
       if (delta) {
         this.changeDot(false);
         if (delta > 0) {
-          this.options.position.master += delta - 1;
-          this.options.position.slave += delta - 1;
+          if (this.options.loop) {
+            this.options.position.master += delta - 1;
+            this.options.position.slave += delta - 1;
+          } else this.options.position += delta - 1;
           this.nextSlide(event);
         } else {
-          this.options.position.master += delta + 1;
-          this.options.position.slave += delta + 1;
+          if (this.options.loop) {
+            this.options.position.master += delta + 1;
+            this.options.position.slave += delta + 1;
+          } else this.options.position += delta + 1;
           this.prevSlide(event);
         }
       }
@@ -344,13 +390,18 @@ class SliderCarousel {
         this.setStartPosition();
 
         if (this.options.showCenter) {
-          this.slides.master.forEach(this.options.showCenter[1]);
-          this.slides.slave.forEach(this.options.showCenter[1]);
+          if (this.options.loop) {
+            this.slides.master.forEach(this.options.showCenter[1]);
+            this.slides.slave.forEach(this.options.showCenter[1]);
+          } else {
+            this.slides.forEach(this.options.showCenter[1]);
+          }
           this.options.showCenter[0](this.getCenterElem());
         }
-
-        this.main.prepend(this.wrap.slave);
-        this.main.prepend(this.wrap.master);
+        if (this.options.loop) {
+          this.main.prepend(this.wrap.slave);
+          this.main.prepend(this.wrap.master);
+        }
         if (this.options.autoplay) {
           this.startSlider();
         }

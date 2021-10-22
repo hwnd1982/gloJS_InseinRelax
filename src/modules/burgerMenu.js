@@ -15,12 +15,10 @@ const
     const popupDialogMenu = document.querySelector('.popup-dialog-menu');
 
     window.addEventListener('resize', () => {
-      if (popupDialogMenu.style.transform !== 'translate3d(0px, 0px, 0px)') {
-        popupDialogMenu.parentElement.append(popupDialogMenu);
-        screen.width > 576 ?
-          popupDialogMenu.style.transform = 'translate3d(100%px, 0, 0)' :
-          popupDialogMenu.style.transform = 'translate3d(0, -100vh, 0)';
-      }
+      innerWidth > 576 ?
+        popupDialogMenu.style.transform = 'translate3d(100%, 0, 0)' :
+        popupDialogMenu.style.transform = 'translate3d(0, -100vh, 0)';
+      popupDialogMenu.parentElement.append(popupDialogMenu);
     });
     document.addEventListener('click', event => {
       const
@@ -30,7 +28,7 @@ const
         popupDialogMenu.style.transform = 'translate3d(0, 0, 0)';
       } else {
         if (!target.closest('.popup-dialog-menu') || target.matches('.close-menu, .menu-link')) {
-          screen.width > 576 ?
+          innerWidth > 576 ?
             popupDialogMenu.style.transform = 'translate3d(100%, 0, 0)' :
             popupDialogMenu.style.transform = 'translate3d(0, -100vh, 0)';
           if (target.matches('.menu-link')) {
