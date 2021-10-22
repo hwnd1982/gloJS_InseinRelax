@@ -437,6 +437,8 @@ template,
   display: -ms-flexbox;
   display: flex;
   left: 40px;
+  margin-top: 40px;
+  margin-bottom: auto;
 }
 
 @media (max-width: 575px) {
@@ -509,13 +511,13 @@ template,
 
 .header-contacts__arrow {
   cursor: pointer;
-  -webkit-transition: 0.5s;
-  transition: 0.5s;
 }
 
 .header-contacts__arrow img {
   margin-top: 12px;
   margin-left: 5px;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
 }
 
 .header-contacts__messagers {
@@ -1375,6 +1377,17 @@ template,
     padding-top: 35px;
     top: 155px;
   }
+}
+
+.formula-item-popup.inverted {
+  bottom: 0;
+  transform: translate3d(0, 107%, 0);
+  padding: 40px 40px 0;
+  z-index: 99;
+}
+.formula-item-popup.inverted:before {
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 @media (max-width: 575px) {

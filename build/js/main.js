@@ -397,7 +397,7 @@ var smoothScrollOfLink = function smoothScrollOfLink(event) {
   window.addEventListener('resize', function () {
     if (popupDialogMenu.style.transform !== 'translate3d(0px, 0px, 0px)') {
       popupDialogMenu.parentElement.append(popupDialogMenu);
-      screen.width > 576 ? popupDialogMenu.style.transform = 'translate3d(555px, 0, 0)' : popupDialogMenu.style.transform = 'translate3d(0, -100vh, 0)';
+      screen.width > 576 ? popupDialogMenu.style.transform = 'translate3d(100%px, 0, 0)' : popupDialogMenu.style.transform = 'translate3d(0, -100vh, 0)';
     }
   });
   document.addEventListener('click', function (event) {
@@ -407,7 +407,7 @@ var smoothScrollOfLink = function smoothScrollOfLink(event) {
       popupDialogMenu.style.transform = 'translate3d(0, 0, 0)';
     } else {
       if (!target.closest('.popup-dialog-menu') || target.matches('.close-menu, .menu-link')) {
-        screen.width > 576 ? popupDialogMenu.style.transform = 'translate3d(555px, 0, 0)' : popupDialogMenu.style.transform = 'translate3d(0, -100vh, 0)';
+        screen.width > 576 ? popupDialogMenu.style.transform = 'translate3d(100%, 0, 0)' : popupDialogMenu.style.transform = 'translate3d(0, -100vh, 0)';
 
         if (target.matches('.menu-link')) {
           smoothScrollOfLink(event);
@@ -436,19 +436,37 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
 /* harmony export */ });
 var formulaPopupDesktop = function formulaPopupDesktop() {
-  var togglePopup = function togglePopup(_ref) {
+  var positionPopup = function positionPopup(target) {
+    var popup = target.querySelector('.formula-item-popup'),
+        popupPosition = popup.getBoundingClientRect();
+
+    if (!popup.classList.contains('inverted')) {
+      if (popupPosition.top < 10) popup.classList.add('inverted');
+    } else {
+      if (popupPosition.top > popupPosition.height + 100) popup.classList.remove('inverted');
+    }
+  },
+      togglePopup = function togglePopup(_ref) {
     var target = _ref.target;
-    var item = target.closest('.formula-item__icon');
+    var item = target.closest('.formula-item__icon'),
+        popup = item ? item.querySelector('.formula-item-popup') : null;
     if (!item || target.closest('.formula-slider__slide')) return;
     var visible = 0;
     item.classList.toggle('visible');
+    item.classList.toggle('visible-formula-item-popup');
     visible = item.classList.contains('visible') ? 1 : 0;
-    item.querySelector('.formula-item-popup').style.cssText = "opacity: ".concat(visible, "; visibility: ").concat(visible ? 'visible' : 'hidden', ";");
+    item.parentElement.style.cssText = "z-index: ".concat(visible);
+    positionPopup(item);
+    popup.style.cssText = "opacity: ".concat(visible, "; visibility: ").concat(visible ? 'visible' : 'hidden', ";");
     item.querySelector('.formula-item__icon-inner').style.cssText = "opacity: ".concat(visible, ";");
   };
 
   document.querySelector('.formula').addEventListener('mouseover', togglePopup);
   document.querySelector('.formula').addEventListener('mouseout', togglePopup);
+  window.addEventListener('scroll', function () {
+    var item = document.querySelector('.visible-formula-item-popup');
+    if (item) positionPopup(item);
+  });
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (formulaPopupDesktop);
@@ -496,9 +514,19 @@ var headerContactsAccord = function headerContactsAccord() {
     var phoneNumberAccord = document.querySelector(".header-contacts__phone-number-accord");
 
     if (phoneNumberAccord) {
-      phoneNumberAccord.style.position = "relative";
-      phoneNumberAccord.firstElementChild.style.opacity = 1;
-      event.currentTarget.style.opacity = 0;
+      event.currentTarget.classList.toggle('phone-number-accord-show');
+
+      if (event.currentTarget.classList.contains('phone-number-accord-show')) {
+        setTimeout(function () {
+          return phoneNumberAccord.style.position = "absolute";
+        }, 500);
+        phoneNumberAccord.firstElementChild.style.opacity = 0;
+        event.currentTarget.firstElementChild.style.cssText = '';
+      } else {
+        phoneNumberAccord.style.position = "relative";
+        phoneNumberAccord.firstElementChild.style.opacity = 1;
+        event.currentTarget.firstElementChild.style.cssText = 'transform: translate(0, 30px) rotate(180deg)';
+      }
     }
   });
 };
@@ -577,32 +605,183 @@ function maskPhone(selector) {
 
 /***/ }),
 
-/***/ "./modules/popupRepairTypes.js":
-/*!*************************************!*\
-  !*** ./modules/popupRepairTypes.js ***!
-  \*************************************/
+/***/ "./modules/messageSendForm.js":
+/*!************************************!*\
+  !*** ./modules/messageSendForm.js ***!
+  \************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "loadMessage": function() { return /* binding */ loadMessage; },
+/* harmony export */   "successMessage": function() { return /* binding */ successMessage; },
+/* harmony export */   "errorMassage": function() { return /* binding */ errorMassage; }
+/* harmony export */ });
+var errorMassageColor = "#bd313e;\n            opacity: 1;\n            transform: translateY(0);\n          }\n        }\n      </style>",
+    successMessageColor = "#3da35a;\n            opacity: 1;\n            transform: translateY(0);\n          }\n        }\n      </style>",
+    svgAnimationByCSS = "<style>\n        svg {\n          width: 100%;\n          height: 100%;\n        }\n\n        path {\n          stroke-dasharray: 99.47578430175781;\n          stroke-dashoffset: -99.47578430175781;\n          fill: transparent;\n        }\n\n        svg.animate path {\n          animation: 1.7s ease forwards draw;\n          opacity: 1;\n        }\n\n        @keyframes draw {\n          0% {\n            opacity: 1;\n            stroke-dashoffset: -99.47578430175781;\n            fill: transparent;\n            transform: translateY(0);\n          }\n\n          50% {\n            stroke-dashoffset: 0;\n            fill: transparent;\n          }\n\n          100% {\n            fill: ",
+    errorMassage = "".concat(svgAnimationByCSS + errorMassageColor, "\n\n      <svg class=\"animate\" viewbox=\"0 0 32 32\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path\n          d=\"m6.5 22.8l2.7 2.7 6.8-6.8 6.8 6.8 2.7-2.7-6.8-6.8 6.8-6.8-2.7-2.7-6.8 6.8-6.8-6.8-2.7 2.7 6.8 6.8-6.8 6.8z\"\n          stroke=\"#bd313e\"\n          fill=\"transparent\"\n        />\n      </svg>"),
+    loadMessage = "<style>\n        .sk-circle-bounce {\n          width: 100px;\n          height: 100px;\n          position: relative;\n          margin: auto;\n        }\n        .sk-child {\n          width: 100%;\n          height: 100%;\n          position: absolute;\n          left: 0;\n          top: 0;\n        }\n        .sk-circle-bounce .sk-circle-2 {\n          transform: rotate(30deg);\n        }\n        .sk-circle-bounce .sk-circle-3 {\n          transform: rotate(60deg);\n        }\n        .sk-circle-bounce .sk-circle-4 {\n          transform: rotate(90deg);\n        }\n        .sk-circle-bounce .sk-circle-5 {\n          transform: rotate(120deg);\n        }\n        .sk-circle-bounce .sk-circle-6 {\n          transform: rotate(150deg);\n        }\n        .sk-circle-bounce .sk-circle-7 {\n          transform: rotate(180deg);\n        }\n        .sk-circle-bounce .sk-circle-8 {\n          transform: rotate(210deg);\n        }\n        .sk-circle-bounce .sk-circle-9 {\n          transform: rotate(240deg);\n        }\n        .sk-circle-bounce .sk-circle-10 {\n          transform: rotate(270deg);\n        }\n        .sk-circle-bounce .sk-circle-11 {\n          transform: rotate(300deg);\n        }\n        .sk-circle-bounce .sk-circle-12 {\n          transform: rotate(330deg);\n        }\n        .sk-circle-bounce .sk-circle-2:before {\n          animation-delay: -1.1s;\n        }\n        .sk-circle-bounce .sk-circle-3:before {\n          animation-delay: -1s;\n        }\n        .sk-circle-bounce .sk-circle-4:before {\n          animation-delay: -0.9s;\n        }\n        .sk-circle-bounce .sk-circle-5:before {\n          animation-delay: -0.8s;\n        }\n        .sk-circle-bounce .sk-circle-6:before {\n          animation-delay: -0.7s;\n        }\n        .sk-circle-bounce .sk-circle-7:before {\n          animation-delay: -0.6s;\n        }\n        .sk-circle-bounce .sk-circle-8:before {\n          animation-delay: -0.5s;\n        }\n        .sk-circle-bounce .sk-circle-9:before {\n          animation-delay: -0.4s;\n        }\n        .sk-circle-bounce .sk-circle-10:before {\n          animation-delay: -0.3s;\n        }\n        .sk-circle-bounce .sk-circle-11:before {\n          animation-delay: -0.2s;\n        }\n        .sk-circle-bounce .sk-circle-12:before {\n          animation-delay: -0.1s;\n        }\n        .sk-child:before {\n          content: \"\";\n          display: block;\n          margin: 0 auto;\n          width: 15%;\n          height: 15%;\n          background: linear-gradient(90deg, #f17c0c 0%, #fba600 100%), 50%;\n          border-radius: 100%;\n          animation: sk-circle-bounce-delay 1.2s infinite ease-in-out both;\n        }\n        @keyframes sk-circle-bounce-delay {\n          0%,\n          80%,\n          100% {\n            transform: scale(0);\n          }\n          40% {\n            transform: scale(1);\n          }\n        }\n      </style>\n      <div class=\"sk-circle-bounce\">\n        <div class=\"sk-child sk-circle-1\"></div>\n        <div class=\"sk-child sk-circle-2\"></div>\n        <div class=\"sk-child sk-circle-3\"></div>\n        <div class=\"sk-child sk-circle-4\"></div>\n        <div class=\"sk-child sk-circle-5\"></div>\n        <div class=\"sk-child sk-circle-6\"></div>\n        <div class=\"sk-child sk-circle-7\"></div>\n        <div class=\"sk-child sk-circle-8\"></div>\n        <div class=\"sk-child sk-circle-9\"></div>\n        <div class=\"sk-child sk-circle-10\"></div>\n        <div class=\"sk-child sk-circle-11\"></div>\n        <div class=\"sk-child sk-circle-12\"></div>\n      </div>",
+    successMessage = "".concat(svgAnimationByCSS + successMessageColor, "\n      <svg class=\"animate\" viewbox=\"0 0 48 48\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path\n          d=\"M 18 32.34 l -8.34 -8.34 -2.83 2.83 11.17 11.17 24 -24 -2.83 -2.83 z\"\n          d=\"M12.696 11.282l26.022 26.02-1.414 1.415-26.022-26.02z\"\n          d=\"M37.304 11.282l1.414 1.414-26.022 26.02-1.414-1.413z\"\n          stroke=\"#3da35a\"\n          fill=\"transparent\"\n        />\n      </svg>");
+
+
+/***/ }),
+
+/***/ "./modules/popupControl.js":
+/*!*********************************!*\
+  !*** ./modules/popupControl.js ***!
+  \*********************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
 /* harmony export */ });
-var popupRepairTypes = function popupRepairTypes() {
-  document.addEventListener('click', function (event) {
-    var target = event.target,
-        popup = document.querySelector('.popup-repair-types');
+var popupControl = function popupControl() {
+  document.addEventListener('click', function (_ref) {
+    var target = _ref.target;
 
     if (target.matches('.link-list>a')) {
-      popup.style.visibility = 'visible';
+      document.querySelector('.popup-repair-types').style.visibility = 'visible';
     }
 
-    if (target.matches('.close') && target.closest('.popup-repair-types')) {
-      popup.style.visibility = 'hidden';
+    if (target.matches('.link-privacy')) {
+      document.querySelector('.popup-privacy').style.visibility = 'visible';
+    }
+
+    if (target.matches('.close') && target.closest('.popup')) {
+      var popup = target.closest('.popup');
+      if (!popup.matches('.popup-dialog-menu')) popup.style.visibility = 'hidden';
     }
   });
 };
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (popupRepairTypes);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (popupControl);
+
+/***/ }),
+
+/***/ "./modules/sendForm.js":
+/*!*****************************!*\
+  !*** ./modules/sendForm.js ***!
+  \*****************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
+/* harmony export */ });
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var sendForm = function sendForm() {
+  var loadMessage = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Загрузка...';
+  var successMessage = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Спасибо! Мы скоро с вами свяжемся!';
+  var errorMassage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'Что-то пошло не так...';
+  var timerLifeOfStatusMessage;
+
+  var hideStatusMessage = function hideStatusMessage(form, statusMessage, time) {
+    return setTimeout(function () {
+      statusMessage.style = '';
+      statusMessage.textContent = '';
+    }, time);
+  },
+      clearForm = function clearForm(form) {
+    _toConsumableArray(form.elements).forEach(function (elem) {
+      elem.value = '';
+      if (elem.type === 'checkbox') elem.checked = false;
+      elem.classList.remove('success');
+    });
+  },
+      outputData = function outputData(response, form, statusMessage) {
+    if (response.status !== 200) {
+      throw new Error('status network not 200');
+    }
+
+    successMessage instanceof Function ? successMessage() : statusMessage.innerHTML = successMessage;
+    clearForm(form);
+    timerLifeOfStatusMessage = hideStatusMessage(form, statusMessage, 0);
+  },
+      errorData = function errorData(form, statusMessage) {
+    statusMessage.innerHTML = errorMassage;
+    timerLifeOfStatusMessage = hideStatusMessage(form, statusMessage, 3000);
+  },
+      postData = function postData(body) {
+    return fetch('./server.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body),
+      credentials: 'include'
+    });
+  },
+      checkFormData = function checkFormData(form) {
+    return !form.querySelector('input.checkbox__input:checked');
+  };
+
+  document.body.addEventListener('submit', function (event) {
+    var form = event.target;
+    event.preventDefault();
+    if (checkFormData(form)) return;
+    var formData = new FormData(form),
+        body = {};
+    var dataValidation = true,
+        focusInput = false;
+    formData.forEach(function (value, key) {
+      if (!value.trim()) dataValidation = false;
+
+      if (!dataValidation && !focusInput) {
+        form.querySelector("input[name=\"".concat(key, "\"]")).focus();
+        focusInput = true;
+      }
+
+      body[key] = value;
+    });
+    if (!dataValidation) return;
+    var statusMessage = form.appendChild(document.createElement('div'));
+    statusMessage.style.cssText = " \n      position: absolute;\n      left: 50%;\n      top: 50%;\n      transform: translate(-50%, -50%);\n      height: 150px;\n    ";
+    statusMessage.innerHTML = loadMessage;
+
+    if (timerLifeOfStatusMessage) {
+      clearTimeout(timerLifeOfStatusMessage);
+    }
+
+    postData(body).then(function (response) {
+      return outputData(response, form, statusMessage);
+    })["catch"](function () {
+      return errorData(form, statusMessage);
+    });
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (sendForm);
+
+/***/ }),
+
+/***/ "./modules/successMessage.js":
+/*!***********************************!*\
+  !*** ./modules/successMessage.js ***!
+  \***********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
+/* harmony export */ });
+var successMessage = function successMessage() {
+  document.querySelector('.popup-thank').style.cssText = 'visibility: visible';
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (successMessage);
 
 /***/ }),
 
@@ -684,11 +863,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _css_style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./css/style.css */ "./css/style.css");
 /* harmony import */ var _modules_headerContactsAccord__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/headerContactsAccord */ "./modules/headerContactsAccord.js");
 /* harmony import */ var _modules_burgerMenu__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/burgerMenu */ "./modules/burgerMenu.js");
-/* harmony import */ var _modules_popupRepairTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/popupRepairTypes */ "./modules/popupRepairTypes.js");
+/* harmony import */ var _modules_popupControl__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/popupControl */ "./modules/popupControl.js");
 /* harmony import */ var _modules_maskPhone__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/maskPhone */ "./modules/maskPhone.js");
 /* harmony import */ var _modules_formulaPopupDesktop__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/formulaPopupDesktop */ "./modules/formulaPopupDesktop.js");
 /* harmony import */ var _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/SliderCarousel */ "./modules/SliderCarousel.js");
 /* harmony import */ var _modules_formulaPopupSlider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/formulaPopupSlider */ "./modules/formulaPopupSlider.js");
+/* harmony import */ var _modules_sendForm__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/sendForm */ "./modules/sendForm.js");
+/* harmony import */ var _modules_messageSendForm__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modules/messageSendForm */ "./modules/messageSendForm.js");
+/* harmony import */ var _modules_successMessage__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./modules/successMessage */ "./modules/successMessage.js");
+
+
+
 
 
 
@@ -702,7 +887,7 @@ __webpack_require__.r(__webpack_exports__);
 
 (0,_modules_burgerMenu__WEBPACK_IMPORTED_MODULE_2__["default"])(); // Popup Repair Types Active
 
-(0,_modules_popupRepairTypes__WEBPACK_IMPORTED_MODULE_3__["default"])(); // Mask Phone
+(0,_modules_popupControl__WEBPACK_IMPORTED_MODULE_3__["default"])(); // Mask Phone
 
 (0,_modules_maskPhone__WEBPACK_IMPORTED_MODULE_4__["default"])('input[name="phone"]'); // Formula Popup Desktop
 
@@ -724,7 +909,9 @@ var formulaSlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["de
     slidesToShow: 1
   }]
 });
-formulaSlider.init();
+formulaSlider.init(); //
+
+(0,_modules_sendForm__WEBPACK_IMPORTED_MODULE_8__["default"])(_modules_messageSendForm__WEBPACK_IMPORTED_MODULE_9__.loadMessage, _modules_successMessage__WEBPACK_IMPORTED_MODULE_10__["default"], _modules_messageSendForm__WEBPACK_IMPORTED_MODULE_9__.errorMassage);
 }();
 /******/ })()
 ;

@@ -1,18 +1,21 @@
 import './css/style.css';
 import headerContactsAccord from './modules/headerContactsAccord';
 import burgerMenu from './modules/burgerMenu';
-import popupRepairTypes from './modules/popupRepairTypes';
+import popupControl from './modules/popupControl';
 import maskPhone from './modules/maskPhone';
 import formulaPopupDesktop from './modules/formulaPopupDesktop';
 import SliderCarousel from './modules/SliderCarousel';
 import { addHighlightStyle, removeHighlightStyle } from './modules/formulaPopupSlider';
+import sendForm from './modules/sendForm';
+import { errorMassage, loadMessage } from './modules/messageSendForm';
+import successMessage from './modules/successMessage';
 
 // Phone List Active
 headerContactsAccord();
 // Burger Menu Active
 burgerMenu();
 // Popup Repair Types Active
-popupRepairTypes();
+popupControl();
 // Mask Phone
 maskPhone('input[name="phone"]');
 // Formula Popup Desktop
@@ -37,3 +40,5 @@ const formulaSlider = new SliderCarousel({
   ]
 });
 formulaSlider.init();
+//
+sendForm(loadMessage, successMessage, errorMassage);

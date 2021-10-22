@@ -39,6 +39,10 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
+          from: "./*.php",
+          to: "./",
+        },
+        {
           from: "crm-backend",
           to: "crm-backend",
         },
