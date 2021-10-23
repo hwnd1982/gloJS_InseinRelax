@@ -5,6 +5,10 @@ class SliderCarousel {
     next,
     prev,
     slide,
+    style,
+    slideCounter,
+    currentCount,
+    totalCount,
     loop = false,
     pagination = false,
     dotsList,
@@ -15,10 +19,19 @@ class SliderCarousel {
     slidesToShow = 3,
     responsive = []
   }) {
-    const wrapElem = document.querySelector(wrap);
+    const
+      wrapElem = document.querySelector(wrap),
+      slideCounterElem = document.querySelector(slideCounter);
 
     this.example = 1;
-    this.main = document.querySelector(main);
+    this.main = main ? document.querySelector(main) : (() => {
+      const main = document.createElement('div');
+
+      main.id = wrap.slice(1);
+      wrapElem.parentElement.insertBefore(main, wrapElem);
+      main.append(wrapElem);
+      return main;
+    })();
     this.wrap = loop ? {
       master: wrapElem,
       slave: wrapElem.cloneNode(true)
@@ -40,6 +53,10 @@ class SliderCarousel {
         slave: this.slides.master.length + position
       } : position,
       showCenter,
+      slideCounter: slideCounterElem,
+      currentCount: slideCounterElem ? slideCounterElem.querySelector(currentCount) : null,
+      totalCount: slideCounterElem ? slideCounterElem.querySelector(totalCount) : null,
+      style,
       loop,
       pagination,
       autoplay: loop ? autoplay : loop,
@@ -69,6 +86,7 @@ class SliderCarousel {
     }
     if (this.responsive) this.responsiveInit();
     this.setStartPosition();
+    if (this.options.slideCounter) this.setSlideCounter();
     if (this.options.showCenter) this.options.showCenter[0](this.getCenterElem());
   }
   checkExample() {
@@ -122,114 +140,118 @@ class SliderCarousel {
     this.next.classList.add(`glo-${this.example}-slider__buttons`);
   }
   addStyle() {
-    const style =  document.getElementById(`glo-${this.example}-slider-style`) || document.createElement('style');
+    if (this.options.style) {
+      this.options.style(this.example, this.options.widthSlide, !!this.dots);
+    } else {
+      const style =  document.getElementById(`glo-${this.example}-slider-style`) || document.createElement('style');
 
-    style.id = `glo-${this.example}-slider-style`;
-    document.body.append(style);
-    style.textContent =
-      ` .glo-${this.example}-slider {
-          overflow: hidden !important;
-          position: relative !important;
-        }
-        .glo-${this.example}-slider__wrap {
-          position: relative !important;
-          display: flex !important;
-          width: 100% !important;
-          transition: transform 0.5s !important;
-          will-change: transform !important;
-          overflow: initial !important;
-        }
-        .glo-${this.example}-slider__wrap.glo-${this.example}-slider__wrap_slave {
-          position: absolute !important;
-          top: 0 !important;
-        }
-        .glo-${this.example}-slider__item {
-          display: flex !important;
-          flex: 0 0 ${this.options.widthSlide}% !important;
-          position: static !important;
-          transform: translate(0, 0) !important;
-          width: 100% !important;
-          transition: none !important;
-          justify-content: flex-start !important;
-        }
-        .glo-${this.example}-slider__next,
-        .glo-${this.example}-slider__prev {
-          position: absolute;
-          transform: translate(0, -50%);
-          top: 50%;
-          border: 20px solid transparent;
-          background: transparent;
-          cursor: pointer;
-          z-index: 10;
-        }
-        .glo-${this.example}-slider__next {
-          right: 5px;
-          border-left-color: #19b5fe;
-        }
-        .glo-${this.example}-slider__prev {
-          left: 5px;
-          border-right-color: #19b5fe;
-        }
-        @media (max-width: 690px) {
+      style.id = `glo-${this.example}-slider-style`;
+      document.body.append(style);
+      style.textContent =
+        ` .glo-${this.example}-slider {
+            overflow: hidden !important;
+            position: relative !important;
+          }
+          .glo-${this.example}-slider__wrap {
+            position: relative !important;
+            display: flex !important;
+            width: 100% !important;
+            transition: transform 0.5s !important;
+            will-change: transform !important;
+            overflow: initial !important;
+          }
+          .glo-${this.example}-slider__wrap.glo-${this.example}-slider__wrap_slave {
+            position: absolute !important;
+            top: 0 !important;
+          }
+          .glo-${this.example}-slider__item {
+            display: flex !important;
+            flex: 0 0 ${this.options.widthSlide}% !important;
+            position: static !important;
+            transform: translate(0, 0) !important;
+            width: 100% !important;
+            transition: none !important;
+            justify-content: flex-start !important;
+          }
           .glo-${this.example}-slider__next,
           .glo-${this.example}-slider__prev {
-            border: 15px solid transparent;
-          }
-          .glo-${this.example}-slider__next {
-            right: 5px;
-            border-left-color: #19b5fe;
-          }
-          .glo-${this.example}-slider__prev {
-            left: 5px;
-            border-right-color: #19b5fe;
-          }
-        }
-        @media (max-width: 448px) {
-          .glo-${this.example}-slider__next,
-          .glo-${this.example}-slider__prev {
-            border: 10px solid transparent;
-          }
-          .glo-${this.example}-slider__next {
-            right: 5px;
-            border-left-color: #19b5fe;
-          }
-          .glo-${this.example}-slider__prev {
-            left: 5px;
-            border-right-color: #19b5fe;
-          }
-        }
-      `;
-    if (this.dots) {
-      style.textContent +=
-        ` .glo-${this.example}-slider__dots {
             position: absolute;
-            bottom: 20px;
-            width: 100%;
-            margin: 20px auto 0;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            justify-content: center;
-            z-index: 5;
-          }
-          .glo-${this.example}-slider__dots .dot {
+            transform: translate(0, -50%);
+            top: 50%;
+            border: 20px solid transparent;
+            background: transparent;
             cursor: pointer;
-            height: 16px;
-            width: 16px;
-            margin: 0 10px;
-            border-radius: 50%;
-            border: solid #fff;
-            display: inline-block;
-            transition: background-color, transform 0.4s, -webkit-transform 0.4s;
+            z-index: 10;
           }
-          .glo-${this.example}-slider__dots .dot-active {
-            background-color: #19b5fe;
-            transform: scale(1.2);
+          .glo-${this.example}-slider__next {
+            right: 5px;
+            border-left-color: #19b5fe;
           }
-          .glo-${this.example}-slider__dots .dot:hover {
-            background-color: #53c6fe;
-            transform: scale(1.2);
-          }`;
+          .glo-${this.example}-slider__prev {
+            left: 5px;
+            border-right-color: #19b5fe;
+          }
+          @media (max-width: 690px) {
+            .glo-${this.example}-slider__next,
+            .glo-${this.example}-slider__prev {
+              border: 15px solid transparent;
+            }
+            .glo-${this.example}-slider__next {
+              right: 5px;
+              border-left-color: #19b5fe;
+            }
+            .glo-${this.example}-slider__prev {
+              left: 5px;
+              border-right-color: #19b5fe;
+            }
+          }
+          @media (max-width: 448px) {
+            .glo-${this.example}-slider__next,
+            .glo-${this.example}-slider__prev {
+              border: 10px solid transparent;
+            }
+            .glo-${this.example}-slider__next {
+              right: 5px;
+              border-left-color: #19b5fe;
+            }
+            .glo-${this.example}-slider__prev {
+              left: 5px;
+              border-right-color: #19b5fe;
+            }
+          }
+        `;
+      if (this.dots) {
+        style.textContent +=
+          ` .glo-${this.example}-slider__dots {
+              position: absolute;
+              bottom: 20px;
+              width: 100%;
+              margin: 20px auto 0;
+              display: -webkit-box;
+              display: -ms-flexbox;
+              display: flex;
+              justify-content: center;
+              z-index: 5;
+            }
+            .glo-${this.example}-slider__dots .dot {
+              cursor: pointer;
+              height: 16px;
+              width: 16px;
+              margin: 0 10px;
+              border-radius: 50%;
+              border: solid #fff;
+              display: inline-block;
+              transition: background-color, transform 0.4s, -webkit-transform 0.4s;
+            }
+            .glo-${this.example}-slider__dots .dot-active {
+              background-color: #19b5fe;
+              transform: scale(1.2);
+            }
+            .glo-${this.example}-slider__dots .dot:hover {
+              background-color: #53c6fe;
+              transform: scale(1.2);
+            }`;
+      }
     }
   }
   controlSlider() {
@@ -272,7 +294,19 @@ class SliderCarousel {
       }
     }
     if (this.options.showCenter) this.options.showCenter[0](this.getCenterElem());
+    if (this.options.slideCounter) this.setSlideCounter();
     if (this.options.pagination) this.changeDot(true);
+  }
+  setSlideCounter() {
+    if (this.options.loop) {
+      this.options.currentCount.textContent = 1 +
+        this.options.position.master >= 0 && this.options.position.master < this.slides.master.length ?
+        this.options.position.master : this.options.position.slave;
+      this.options.totalCount = this.slides.master.length;
+    } else {
+      this.options.currentCount.textContent = 1 + this.options.position;
+      this.options.totalCount.textContent = this.slides.length;
+    }
   }
   changeDot(add) {
     if (this.options.loop)
@@ -310,6 +344,7 @@ class SliderCarousel {
       }
     }
     if (this.options.showCenter) this.options.showCenter[0](this.getCenterElem());
+    if (this.options.slideCounter) this.setSlideCounter();
     if (this.options.pagination) this.changeDot(true);
   }
   addArrow() {
@@ -398,10 +433,7 @@ class SliderCarousel {
           }
           this.options.showCenter[0](this.getCenterElem());
         }
-        if (this.options.loop) {
-          this.main.prepend(this.wrap.slave);
-          this.main.prepend(this.wrap.master);
-        }
+        this.resetSlider();
         if (this.options.autoplay) {
           this.startSlider();
         }
@@ -409,6 +441,14 @@ class SliderCarousel {
 
     checkResponse();
     window.addEventListener('resize', () => checkResponse());
+  }
+  resetSlider() {
+    if (this.options.loop) {
+      this.main.prepend(this.wrap.slave);
+      this.main.prepend(this.wrap.master);
+    } else {
+      this.main.prepend(this.wrap);
+    }
   }
 }
 

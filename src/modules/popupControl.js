@@ -3,6 +3,9 @@ const popupControl = () => {
     if (target.matches('.link-list>a')) {
       document.querySelector('.popup-repair-types').style.visibility = 'visible';
     }
+    if (target.closest('.transparency-item__img')) {
+      document.querySelector('.popup-transparency').style.visibility = 'visible';
+    }
     if (target.matches('.link-privacy')) {
       document.querySelector('.popup-privacy').style.visibility = 'visible';
     }

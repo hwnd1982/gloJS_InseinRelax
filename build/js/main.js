@@ -37,6 +37,10 @@ var SliderCarousel = /*#__PURE__*/function () {
         next = _ref.next,
         prev = _ref.prev,
         slide = _ref.slide,
+        style = _ref.style,
+        slideCounter = _ref.slideCounter,
+        currentCount = _ref.currentCount,
+        totalCount = _ref.totalCount,
         _ref$loop = _ref.loop,
         loop = _ref$loop === void 0 ? false : _ref$loop,
         _ref$pagination = _ref.pagination,
@@ -57,9 +61,16 @@ var SliderCarousel = /*#__PURE__*/function () {
 
     _classCallCheck(this, SliderCarousel);
 
-    var wrapElem = document.querySelector(wrap);
+    var wrapElem = document.querySelector(wrap),
+        slideCounterElem = document.querySelector(slideCounter);
     this.example = 1;
-    this.main = document.querySelector(main);
+    this.main = main ? document.querySelector(main) : function () {
+      var main = document.createElement('div');
+      main.id = wrap.slice(1);
+      wrapElem.parentElement.insertBefore(main, wrapElem);
+      main.append(wrapElem);
+      return main;
+    }();
     this.wrap = loop ? {
       master: wrapElem,
       slave: wrapElem.cloneNode(true)
@@ -80,6 +91,10 @@ var SliderCarousel = /*#__PURE__*/function () {
         slave: this.slides.master.length + position
       } : position,
       showCenter: showCenter,
+      slideCounter: slideCounterElem,
+      currentCount: slideCounterElem ? slideCounterElem.querySelector(currentCount) : null,
+      totalCount: slideCounterElem ? slideCounterElem.querySelector(totalCount) : null,
+      style: style,
       loop: loop,
       pagination: pagination,
       autoplay: loop ? autoplay : loop,
@@ -119,6 +134,7 @@ var SliderCarousel = /*#__PURE__*/function () {
 
       if (this.responsive) this.responsiveInit();
       this.setStartPosition();
+      if (this.options.slideCounter) this.setSlideCounter();
       if (this.options.showCenter) this.options.showCenter[0](this.getCenterElem());
     }
   }, {
@@ -192,13 +208,17 @@ var SliderCarousel = /*#__PURE__*/function () {
   }, {
     key: "addStyle",
     value: function addStyle() {
-      var style = document.getElementById("glo-".concat(this.example, "-slider-style")) || document.createElement('style');
-      style.id = "glo-".concat(this.example, "-slider-style");
-      document.body.append(style);
-      style.textContent = " .glo-".concat(this.example, "-slider {\n          overflow: hidden !important;\n          position: relative !important;\n        }\n        .glo-").concat(this.example, "-slider__wrap {\n          position: relative !important;\n          display: flex !important;\n          width: 100% !important;\n          transition: transform 0.5s !important;\n          will-change: transform !important;\n          overflow: initial !important;\n        }\n        .glo-").concat(this.example, "-slider__wrap.glo-").concat(this.example, "-slider__wrap_slave {\n          position: absolute !important;\n          top: 0 !important;\n        }\n        .glo-").concat(this.example, "-slider__item {\n          display: flex !important;\n          flex: 0 0 ").concat(this.options.widthSlide, "% !important;\n          position: static !important;\n          transform: translate(0, 0) !important;\n          width: 100% !important;\n          transition: none !important;\n          justify-content: flex-start !important;\n        }\n        .glo-").concat(this.example, "-slider__next,\n        .glo-").concat(this.example, "-slider__prev {\n          position: absolute;\n          transform: translate(0, -50%);\n          top: 50%;\n          border: 20px solid transparent;\n          background: transparent;\n          cursor: pointer;\n          z-index: 10;\n        }\n        .glo-").concat(this.example, "-slider__next {\n          right: 5px;\n          border-left-color: #19b5fe;\n        }\n        .glo-").concat(this.example, "-slider__prev {\n          left: 5px;\n          border-right-color: #19b5fe;\n        }\n        @media (max-width: 690px) {\n          .glo-").concat(this.example, "-slider__next,\n          .glo-").concat(this.example, "-slider__prev {\n            border: 15px solid transparent;\n          }\n          .glo-").concat(this.example, "-slider__next {\n            right: 5px;\n            border-left-color: #19b5fe;\n          }\n          .glo-").concat(this.example, "-slider__prev {\n            left: 5px;\n            border-right-color: #19b5fe;\n          }\n        }\n        @media (max-width: 448px) {\n          .glo-").concat(this.example, "-slider__next,\n          .glo-").concat(this.example, "-slider__prev {\n            border: 10px solid transparent;\n          }\n          .glo-").concat(this.example, "-slider__next {\n            right: 5px;\n            border-left-color: #19b5fe;\n          }\n          .glo-").concat(this.example, "-slider__prev {\n            left: 5px;\n            border-right-color: #19b5fe;\n          }\n        }\n      ");
+      if (this.options.style) {
+        this.options.style(this.example, this.options.widthSlide, !!this.dots);
+      } else {
+        var style = document.getElementById("glo-".concat(this.example, "-slider-style")) || document.createElement('style');
+        style.id = "glo-".concat(this.example, "-slider-style");
+        document.body.append(style);
+        style.textContent = " .glo-".concat(this.example, "-slider {\n            overflow: hidden !important;\n            position: relative !important;\n          }\n          .glo-").concat(this.example, "-slider__wrap {\n            position: relative !important;\n            display: flex !important;\n            width: 100% !important;\n            transition: transform 0.5s !important;\n            will-change: transform !important;\n            overflow: initial !important;\n          }\n          .glo-").concat(this.example, "-slider__wrap.glo-").concat(this.example, "-slider__wrap_slave {\n            position: absolute !important;\n            top: 0 !important;\n          }\n          .glo-").concat(this.example, "-slider__item {\n            display: flex !important;\n            flex: 0 0 ").concat(this.options.widthSlide, "% !important;\n            position: static !important;\n            transform: translate(0, 0) !important;\n            width: 100% !important;\n            transition: none !important;\n            justify-content: flex-start !important;\n          }\n          .glo-").concat(this.example, "-slider__next,\n          .glo-").concat(this.example, "-slider__prev {\n            position: absolute;\n            transform: translate(0, -50%);\n            top: 50%;\n            border: 20px solid transparent;\n            background: transparent;\n            cursor: pointer;\n            z-index: 10;\n          }\n          .glo-").concat(this.example, "-slider__next {\n            right: 5px;\n            border-left-color: #19b5fe;\n          }\n          .glo-").concat(this.example, "-slider__prev {\n            left: 5px;\n            border-right-color: #19b5fe;\n          }\n          @media (max-width: 690px) {\n            .glo-").concat(this.example, "-slider__next,\n            .glo-").concat(this.example, "-slider__prev {\n              border: 15px solid transparent;\n            }\n            .glo-").concat(this.example, "-slider__next {\n              right: 5px;\n              border-left-color: #19b5fe;\n            }\n            .glo-").concat(this.example, "-slider__prev {\n              left: 5px;\n              border-right-color: #19b5fe;\n            }\n          }\n          @media (max-width: 448px) {\n            .glo-").concat(this.example, "-slider__next,\n            .glo-").concat(this.example, "-slider__prev {\n              border: 10px solid transparent;\n            }\n            .glo-").concat(this.example, "-slider__next {\n              right: 5px;\n              border-left-color: #19b5fe;\n            }\n            .glo-").concat(this.example, "-slider__prev {\n              left: 5px;\n              border-right-color: #19b5fe;\n            }\n          }\n        ");
 
-      if (this.dots) {
-        style.textContent += " .glo-".concat(this.example, "-slider__dots {\n            position: absolute;\n            bottom: 20px;\n            width: 100%;\n            margin: 20px auto 0;\n            display: -webkit-box;\n            display: -ms-flexbox;\n            display: flex;\n            justify-content: center;\n            z-index: 5;\n          }\n          .glo-").concat(this.example, "-slider__dots .dot {\n            cursor: pointer;\n            height: 16px;\n            width: 16px;\n            margin: 0 10px;\n            border-radius: 50%;\n            border: solid #fff;\n            display: inline-block;\n            transition: background-color, transform 0.4s, -webkit-transform 0.4s;\n          }\n          .glo-").concat(this.example, "-slider__dots .dot-active {\n            background-color: #19b5fe;\n            transform: scale(1.2);\n          }\n          .glo-").concat(this.example, "-slider__dots .dot:hover {\n            background-color: #53c6fe;\n            transform: scale(1.2);\n          }");
+        if (this.dots) {
+          style.textContent += " .glo-".concat(this.example, "-slider__dots {\n              position: absolute;\n              bottom: 20px;\n              width: 100%;\n              margin: 20px auto 0;\n              display: -webkit-box;\n              display: -ms-flexbox;\n              display: flex;\n              justify-content: center;\n              z-index: 5;\n            }\n            .glo-").concat(this.example, "-slider__dots .dot {\n              cursor: pointer;\n              height: 16px;\n              width: 16px;\n              margin: 0 10px;\n              border-radius: 50%;\n              border: solid #fff;\n              display: inline-block;\n              transition: background-color, transform 0.4s, -webkit-transform 0.4s;\n            }\n            .glo-").concat(this.example, "-slider__dots .dot-active {\n              background-color: #19b5fe;\n              transform: scale(1.2);\n            }\n            .glo-").concat(this.example, "-slider__dots .dot:hover {\n              background-color: #53c6fe;\n              transform: scale(1.2);\n            }");
+        }
       }
     }
   }, {
@@ -251,7 +271,19 @@ var SliderCarousel = /*#__PURE__*/function () {
       }
 
       if (this.options.showCenter) this.options.showCenter[0](this.getCenterElem());
+      if (this.options.slideCounter) this.setSlideCounter();
       if (this.options.pagination) this.changeDot(true);
+    }
+  }, {
+    key: "setSlideCounter",
+    value: function setSlideCounter() {
+      if (this.options.loop) {
+        this.options.currentCount.textContent = 1 + this.options.position.master >= 0 && this.options.position.master < this.slides.master.length ? this.options.position.master : this.options.position.slave;
+        this.options.totalCount = this.slides.master.length;
+      } else {
+        this.options.currentCount.textContent = 1 + this.options.position;
+        this.options.totalCount.textContent = this.slides.length;
+      }
     }
   }, {
     key: "changeDot",
@@ -291,6 +323,7 @@ var SliderCarousel = /*#__PURE__*/function () {
       }
 
       if (this.options.showCenter) this.options.showCenter[0](this.getCenterElem());
+      if (this.options.slideCounter) this.setSlideCounter();
       if (this.options.pagination) this.changeDot(true);
     }
   }, {
@@ -402,11 +435,7 @@ var SliderCarousel = /*#__PURE__*/function () {
           _this5.options.showCenter[0](_this5.getCenterElem());
         }
 
-        if (_this5.options.loop) {
-          _this5.main.prepend(_this5.wrap.slave);
-
-          _this5.main.prepend(_this5.wrap.master);
-        }
+        _this5.resetSlider();
 
         if (_this5.options.autoplay) {
           _this5.startSlider();
@@ -417,6 +446,16 @@ var SliderCarousel = /*#__PURE__*/function () {
       window.addEventListener('resize', function () {
         return checkResponse();
       });
+    }
+  }, {
+    key: "resetSlider",
+    value: function resetSlider() {
+      if (this.options.loop) {
+        this.main.prepend(this.wrap.slave);
+        this.main.prepend(this.wrap.master);
+      } else {
+        this.main.prepend(this.wrap);
+      }
     }
   }]);
 
@@ -735,6 +774,10 @@ var popupControl = function popupControl() {
       document.querySelector('.popup-repair-types').style.visibility = 'visible';
     }
 
+    if (target.closest('.transparency-item__img')) {
+      document.querySelector('.popup-transparency').style.visibility = 'visible';
+    }
+
     if (target.matches('.link-privacy')) {
       document.querySelector('.popup-privacy').style.visibility = 'visible';
     }
@@ -861,6 +904,61 @@ var sendForm = function sendForm() {
 
 /***/ }),
 
+/***/ "./modules/setSlidersPosition.js":
+/*!***************************************!*\
+  !*** ./modules/setSlidersPosition.js ***!
+  \***************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "setTransparencyPosition": function() { return /* binding */ setTransparencyPosition; }
+/* harmony export */ });
+var setTransparencyPosition = function setTransparencyPosition(slider) {
+  var transparency = document.getElementById('transparency');
+  transparency.addEventListener('click', function (_ref) {
+    var target = _ref.target;
+
+    if (target.closest('.transparency-item__img')) {
+      var targetItem = target.closest('.transparency-item'),
+          items = transparency.querySelectorAll('.transparency-item');
+      items.forEach(function (item, index) {
+        if (item === targetItem) {
+          slider.options.position = index;
+          slider.setStartPosition();
+          slider.resetSlider();
+          slider.setSlideCounter();
+        }
+      });
+    }
+  });
+};
+
+
+
+/***/ }),
+
+/***/ "./modules/sliderStyles.js":
+/*!*********************************!*\
+  !*** ./modules/sliderStyles.js ***!
+  \*********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "transparencySliderStyles": function() { return /* binding */ transparencySliderStyles; }
+/* harmony export */ });
+var transparencySliderStyles = function transparencySliderStyles(example, widthSlide) {
+  var style = document.getElementById("glo-".concat(example, "-slider-style")) || document.createElement('style');
+  style.id = "glo-".concat(example, "-slider-style");
+  document.body.append(style);
+  style.textContent = " .glo-".concat(example, "-slider {\n        display: flex !important;\n        overflow: hidden !important;\n      }\n      .glo-").concat(example, "-slider__wrap {\n        position: relative !important;\n        display: flex !important;\n        flex-wrap: nowrap !important;\n        width: 100% !important;\n        transition: transform 0.5s !important;\n        will-change: transform !important;\n        overflow: initial !important;\n      }\n      .glo-").concat(example, "-slider__item {\n        display: flex !important;\n        flex: 0 0 ").concat(widthSlide, "% !important;\n        position: static !important;\n        transform: translate(0, 0) !important;\n        width: 100% !important;\n        transition: none !important;\n        justify-content: flex-start !important;\n      }");
+};
+
+
+
+/***/ }),
+
 /***/ "./modules/successMessage.js":
 /*!***********************************!*\
   !*** ./modules/successMessage.js ***!
@@ -962,11 +1060,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_maskPhone__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/maskPhone */ "./modules/maskPhone.js");
 /* harmony import */ var _modules_formulaPopupDesktop__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/formulaPopupDesktop */ "./modules/formulaPopupDesktop.js");
 /* harmony import */ var _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/SliderCarousel */ "./modules/SliderCarousel.js");
-/* harmony import */ var _modules_formulaPopupSlider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/formulaPopupSlider */ "./modules/formulaPopupSlider.js");
-/* harmony import */ var _modules_sendForm__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/sendForm */ "./modules/sendForm.js");
-/* harmony import */ var _modules_messageSendForm__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modules/messageSendForm */ "./modules/messageSendForm.js");
-/* harmony import */ var _modules_successMessage__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./modules/successMessage */ "./modules/successMessage.js");
-/* harmony import */ var _modules_faqAccordion__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./modules/faqAccordion */ "./modules/faqAccordion.js");
+/* harmony import */ var _modules_sliderStyles__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/sliderStyles */ "./modules/sliderStyles.js");
+/* harmony import */ var _modules_formulaPopupSlider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/formulaPopupSlider */ "./modules/formulaPopupSlider.js");
+/* harmony import */ var _modules_sendForm__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modules/sendForm */ "./modules/sendForm.js");
+/* harmony import */ var _modules_messageSendForm__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./modules/messageSendForm */ "./modules/messageSendForm.js");
+/* harmony import */ var _modules_successMessage__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./modules/successMessage */ "./modules/successMessage.js");
+/* harmony import */ var _modules_faqAccordion__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./modules/faqAccordion */ "./modules/faqAccordion.js");
+/* harmony import */ var _modules_setSlidersPosition__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./modules/setSlidersPosition */ "./modules/setSlidersPosition.js");
+
+
 
 
 
@@ -996,7 +1098,7 @@ var formulaSlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["de
   prev: '#formula-arrow_left',
   next: '#formula-arrow_right',
   loop: true,
-  showCenter: [_modules_formulaPopupSlider__WEBPACK_IMPORTED_MODULE_7__.addHighlightStyle, _modules_formulaPopupSlider__WEBPACK_IMPORTED_MODULE_7__.removeHighlightStyle],
+  showCenter: [_modules_formulaPopupSlider__WEBPACK_IMPORTED_MODULE_8__.addHighlightStyle, _modules_formulaPopupSlider__WEBPACK_IMPORTED_MODULE_8__.removeHighlightStyle],
   autoplay: true,
   time: 5000,
   position: -1,
@@ -1008,12 +1110,11 @@ var formulaSlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["de
 });
 formulaSlider.init(); // Send Form
 
-(0,_modules_sendForm__WEBPACK_IMPORTED_MODULE_8__["default"])(_modules_messageSendForm__WEBPACK_IMPORTED_MODULE_9__.loadMessage, _modules_successMessage__WEBPACK_IMPORTED_MODULE_10__["default"], _modules_messageSendForm__WEBPACK_IMPORTED_MODULE_9__.errorMassage); // FAQ Accordion (undefined: Maximize & Minimize All, true: Single Minimize All, false: Single)
+(0,_modules_sendForm__WEBPACK_IMPORTED_MODULE_9__["default"])(_modules_messageSendForm__WEBPACK_IMPORTED_MODULE_10__.loadMessage, _modules_successMessage__WEBPACK_IMPORTED_MODULE_11__["default"], _modules_messageSendForm__WEBPACK_IMPORTED_MODULE_10__.errorMassage); // FAQ Accordion (undefined: Maximize & Minimize All, true: Single Minimize All, false: Single)
 
-(0,_modules_faqAccordion__WEBPACK_IMPORTED_MODULE_11__["default"])(false); // Reviews Slider
+(0,_modules_faqAccordion__WEBPACK_IMPORTED_MODULE_12__["default"])(false); // Reviews Slider
 
 var reviewsSlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["default"]({
-  main: '#reviews-slider',
   wrap: '.reviews-slider',
   prev: '#reviews-arrow_left',
   next: '#reviews-arrow_right',
@@ -1022,7 +1123,36 @@ var reviewsSlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["de
   pagination: true,
   slidesToShow: 1
 });
-reviewsSlider.init();
+reviewsSlider.init(); // Transparency Slider
+
+var transparencySlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["default"]({
+  // main: '.transparency-slider-wrap',
+  wrap: '.transparency-slider',
+  prev: '#transparency-arrow_left',
+  next: '#transparency-arrow_right',
+  style: _modules_sliderStyles__WEBPACK_IMPORTED_MODULE_7__.transparencySliderStyles,
+  position: 0,
+  slidesToShow: 3,
+  responsive: [{
+    breakpoint: 1090,
+    slidesToShow: 1
+  }]
+});
+transparencySlider.init(); //Popup Transparency Slider
+
+var popupTransparencySlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["default"]({
+  wrap: '.popup-transparency-slider',
+  prev: '#transparency_left',
+  next: '#transparency_right',
+  style: _modules_sliderStyles__WEBPACK_IMPORTED_MODULE_7__.transparencySliderStyles,
+  slideCounter: '#transparency-popup-counter',
+  currentCount: '.slider-counter-content__current',
+  totalCount: '.slider-counter-content__total',
+  position: 0,
+  slidesToShow: 1
+});
+popupTransparencySlider.init();
+(0,_modules_setSlidersPosition__WEBPACK_IMPORTED_MODULE_13__.setTransparencyPosition)(popupTransparencySlider);
 }();
 /******/ })()
 ;

@@ -5,11 +5,13 @@ import popupControl from './modules/popupControl';
 import maskPhone from './modules/maskPhone';
 import formulaPopupDesktop from './modules/formulaPopupDesktop';
 import SliderCarousel from './modules/SliderCarousel';
+import { transparencySliderStyles } from './modules/sliderStyles';
 import { addHighlightStyle, removeHighlightStyle } from './modules/formulaPopupSlider';
 import sendForm from './modules/sendForm';
 import { errorMassage, loadMessage } from './modules/messageSendForm';
 import successMessage from './modules/successMessage';
 import faqAccordion from './modules/faqAccordion';
+import { setTransparencyPosition } from './modules/setSlidersPosition';
 
 // Phone List Active
 headerContactsAccord();
@@ -47,7 +49,6 @@ sendForm(loadMessage, successMessage, errorMassage);
 faqAccordion(false);
 // Reviews Slider
 const reviewsSlider = new SliderCarousel({
-  main: '#reviews-slider',
   wrap: '.reviews-slider',
   prev: '#reviews-arrow_left',
   next: '#reviews-arrow_right',
@@ -57,3 +58,34 @@ const reviewsSlider = new SliderCarousel({
   slidesToShow: 1,
 });
 reviewsSlider.init();
+// Transparency Slider
+const transparencySlider = new SliderCarousel({
+  // main: '.transparency-slider-wrap',
+  wrap: '.transparency-slider',
+  prev: '#transparency-arrow_left',
+  next: '#transparency-arrow_right',
+  style: transparencySliderStyles,
+  position: 0,
+  slidesToShow: 3,
+  responsive: [
+    {
+      breakpoint: 1090,
+      slidesToShow: 1
+    },
+  ]
+});
+transparencySlider.init();
+//Popup Transparency Slider
+const popupTransparencySlider = new SliderCarousel({
+  wrap: '.popup-transparency-slider',
+  prev: '#transparency_left',
+  next: '#transparency_right',
+  style: transparencySliderStyles,
+  slideCounter: '#transparency-popup-counter',
+  currentCount: '.slider-counter-content__current',
+  totalCount: '.slider-counter-content__total',
+  position: 0,
+  slidesToShow: 1,
+});
+popupTransparencySlider.init();
+setTransparencyPosition(popupTransparencySlider);
