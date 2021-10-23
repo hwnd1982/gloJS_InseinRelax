@@ -18,6 +18,7 @@ class SliderCarousel {
     autoplay = false,
     time = 3000,
     slidesToShow = 3,
+    resetDefault = false,
     responsive = []
   }) {
     const
@@ -54,6 +55,7 @@ class SliderCarousel {
       } : position,
       showCenter,
       showCurrent,
+      resetDefault,
       slideCounter: slideCounterElem,
       currentCount: slideCounterElem ? slideCounterElem.querySelector(currentCount) : null,
       totalCount: slideCounterElem ? slideCounterElem.querySelector(totalCount) : null,
@@ -433,6 +435,8 @@ class SliderCarousel {
         } else {
           this.slidesToShow = slidersToShowDefault;
           this.options.widthSlide = Math.floor(100 / this.slidesToShow);
+          if (this.options.resetDefault)
+            this.options.loop ? this.options.position.master = 0 : this.options.position = 0;
           this.addStyle();
         }
         this.setStartPosition();

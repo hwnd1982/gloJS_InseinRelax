@@ -68,6 +68,7 @@ const transparencySlider = new SliderCarousel({
   style: transparencySliderStyles,
   position: 0,
   slidesToShow: 3,
+  resetDefault: true,
   responsive: [
     {
       breakpoint: 1090,

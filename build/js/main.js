@@ -58,6 +58,8 @@ var SliderCarousel = /*#__PURE__*/function () {
         time = _ref$time === void 0 ? 3000 : _ref$time,
         _ref$slidesToShow = _ref.slidesToShow,
         slidesToShow = _ref$slidesToShow === void 0 ? 3 : _ref$slidesToShow,
+        _ref$resetDefault = _ref.resetDefault,
+        resetDefault = _ref$resetDefault === void 0 ? false : _ref$resetDefault,
         _ref$responsive = _ref.responsive,
         responsive = _ref$responsive === void 0 ? [] : _ref$responsive;
 
@@ -93,6 +95,7 @@ var SliderCarousel = /*#__PURE__*/function () {
       } : position,
       showCenter: showCenter,
       showCurrent: showCurrent,
+      resetDefault: resetDefault,
       slideCounter: slideCounterElem,
       currentCount: slideCounterElem ? slideCounterElem.querySelector(currentCount) : null,
       totalCount: slideCounterElem ? slideCounterElem.querySelector(totalCount) : null,
@@ -429,6 +432,7 @@ var SliderCarousel = /*#__PURE__*/function () {
         } else {
           _this5.slidesToShow = slidersToShowDefault;
           _this5.options.widthSlide = Math.floor(100 / _this5.slidesToShow);
+          if (_this5.options.resetDefault) _this5.options.loop ? _this5.options.position.master = 0 : _this5.options.position = 0;
 
           _this5.addStyle();
         }
@@ -1289,6 +1293,7 @@ var transparencySlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6_
   style: _modules_sliderStyles__WEBPACK_IMPORTED_MODULE_7__.transparencySliderStyles,
   position: 0,
   slidesToShow: 3,
+  resetDefault: true,
   responsive: [{
     breakpoint: 1090,
     slidesToShow: 1
