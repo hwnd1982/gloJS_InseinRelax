@@ -14,6 +14,7 @@ class SliderCarousel {
     dotsList,
     position = 0,
     showCenter = false,
+    showCurrent = false,
     autoplay = false,
     time = 3000,
     slidesToShow = 3,
@@ -27,7 +28,6 @@ class SliderCarousel {
     this.main = main ? document.querySelector(main) : (() => {
       const main = document.createElement('div');
 
-      main.id = wrap.slice(1);
       wrapElem.parentElement.insertBefore(main, wrapElem);
       main.append(wrapElem);
       return main;
@@ -53,6 +53,7 @@ class SliderCarousel {
         slave: this.slides.master.length + position
       } : position,
       showCenter,
+      showCurrent,
       slideCounter: slideCounterElem,
       currentCount: slideCounterElem ? slideCounterElem.querySelector(currentCount) : null,
       totalCount: slideCounterElem ? slideCounterElem.querySelector(totalCount) : null,
@@ -88,6 +89,7 @@ class SliderCarousel {
     this.setStartPosition();
     if (this.options.slideCounter) this.setSlideCounter();
     if (this.options.showCenter) this.options.showCenter[0](this.getCenterElem());
+    if (this.options.showCurrent) this.options.showCurrent[0](this.getCurrentElem());
   }
   checkExample() {
     while (document.querySelector(`.glo-${this.example}-slider`)) {
@@ -255,8 +257,8 @@ class SliderCarousel {
     }
   }
   controlSlider() {
-    this.prev.addEventListener('click', event => this.prevSlide(event));
-    this.next.addEventListener('click', event => this.nextSlide(event));
+    this.prev.addEventListener('click', event => this.prevSlide(event), false);
+    this.next.addEventListener('click', event => this.nextSlide(event), false);
   }
   getCenterElem() {
     return this.options.loop ? (this.options.position.master >= -Math.floor(this.slidesToShow / 2) &&
@@ -265,11 +267,19 @@ class SliderCarousel {
       this.slides.slave[this.options.position.slave + Math.floor(this.slidesToShow / 2)]) :
       this.slides[this.options.position + Math.floor(this.slidesToShow / 2)];
   }
+  getCurrentElem() {
+    return this.options.loop ? (this.options.position.master >= 0 &&
+        this.options.position.master < this.slides.master.length ?
+      this.slides.master[this.options.position.master] :
+      this.slides.slave[this.options.position.slave]) :
+      this.slides[this.options.position];
+  }
   nextSlide(event) {
     event ? event.preventDefault() : null;
 
     if (this.options.pagination) this.changeDot(false);
     if (this.options.showCenter) this.options.showCenter[1](this.getCenterElem());
+    if (this.options.showCurrent) this.options.showCurrent[1](this.getCurrentElem());
     if (this.options.loop) {
       ++this.options.position.master;
       ++this.options.position.slave;
@@ -294,6 +304,7 @@ class SliderCarousel {
       }
     }
     if (this.options.showCenter) this.options.showCenter[0](this.getCenterElem());
+    if (this.options.showCurrent) this.options.showCurrent[0](this.getCurrentElem());
     if (this.options.slideCounter) this.setSlideCounter();
     if (this.options.pagination) this.changeDot(true);
   }
@@ -319,6 +330,7 @@ class SliderCarousel {
 
     if (this.options.pagination) this.changeDot(false);
     if (this.options.showCenter) this.options.showCenter[1](this.getCenterElem());
+    if (this.options.showCurrent) this.options.showCurrent[1](this.getCurrentElem());
     if (this.options.loop) {
       --this.options.position.master;
       --this.options.position.slave;
@@ -344,6 +356,7 @@ class SliderCarousel {
       }
     }
     if (this.options.showCenter) this.options.showCenter[0](this.getCenterElem());
+    if (this.options.showCurrent) this.options.showCurrent[0](this.getCurrentElem());
     if (this.options.slideCounter) this.setSlideCounter();
     if (this.options.pagination) this.changeDot(true);
   }
@@ -432,6 +445,15 @@ class SliderCarousel {
             this.slides.forEach(this.options.showCenter[1]);
           }
           this.options.showCenter[0](this.getCenterElem());
+        }
+        if (this.options.showCurrent) {
+          if (this.options.loop) {
+            this.slides.master.forEach(this.options.showCurrent[1]);
+            this.slides.slave.forEach(this.options.showCurrent[1]);
+          } else {
+            this.slides.forEach(this.options.showCurrent[1]);
+          }
+          this.options.showCurrent[0](this.getCenterElem());
         }
         this.resetSlider();
         if (this.options.autoplay) {

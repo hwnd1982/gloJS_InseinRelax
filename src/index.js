@@ -5,13 +5,14 @@ import popupControl from './modules/popupControl';
 import maskPhone from './modules/maskPhone';
 import formulaPopupDesktop from './modules/formulaPopupDesktop';
 import SliderCarousel from './modules/SliderCarousel';
-import { transparencySliderStyles } from './modules/sliderStyles';
+import { transparencySliderStyles, repairTypesSliderStyles } from './modules/sliderStyles';
 import { addHighlightStyle, removeHighlightStyle } from './modules/formulaPopupSlider';
 import sendForm from './modules/sendForm';
 import { errorMassage, loadMessage } from './modules/messageSendForm';
 import successMessage from './modules/successMessage';
 import faqAccordion from './modules/faqAccordion';
 import { setTransparencyPosition } from './modules/setSlidersPosition';
+import repairTypesControl from './modules/repairTypesControl';
 
 // Phone List Active
 headerContactsAccord();
@@ -89,3 +90,5 @@ const popupTransparencySlider = new SliderCarousel({
 });
 popupTransparencySlider.init();
 setTransparencyPosition(popupTransparencySlider);
+// Repair Types Control
+repairTypesControl(SliderCarousel, repairTypesSliderStyles);

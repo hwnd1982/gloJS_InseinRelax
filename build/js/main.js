@@ -50,6 +50,8 @@ var SliderCarousel = /*#__PURE__*/function () {
         position = _ref$position === void 0 ? 0 : _ref$position,
         _ref$showCenter = _ref.showCenter,
         showCenter = _ref$showCenter === void 0 ? false : _ref$showCenter,
+        _ref$showCurrent = _ref.showCurrent,
+        showCurrent = _ref$showCurrent === void 0 ? false : _ref$showCurrent,
         _ref$autoplay = _ref.autoplay,
         autoplay = _ref$autoplay === void 0 ? false : _ref$autoplay,
         _ref$time = _ref.time,
@@ -66,7 +68,6 @@ var SliderCarousel = /*#__PURE__*/function () {
     this.example = 1;
     this.main = main ? document.querySelector(main) : function () {
       var main = document.createElement('div');
-      main.id = wrap.slice(1);
       wrapElem.parentElement.insertBefore(main, wrapElem);
       main.append(wrapElem);
       return main;
@@ -91,6 +92,7 @@ var SliderCarousel = /*#__PURE__*/function () {
         slave: this.slides.master.length + position
       } : position,
       showCenter: showCenter,
+      showCurrent: showCurrent,
       slideCounter: slideCounterElem,
       currentCount: slideCounterElem ? slideCounterElem.querySelector(currentCount) : null,
       totalCount: slideCounterElem ? slideCounterElem.querySelector(totalCount) : null,
@@ -136,6 +138,7 @@ var SliderCarousel = /*#__PURE__*/function () {
       this.setStartPosition();
       if (this.options.slideCounter) this.setSlideCounter();
       if (this.options.showCenter) this.options.showCenter[0](this.getCenterElem());
+      if (this.options.showCurrent) this.options.showCurrent[0](this.getCurrentElem());
     }
   }, {
     key: "checkExample",
@@ -228,10 +231,10 @@ var SliderCarousel = /*#__PURE__*/function () {
 
       this.prev.addEventListener('click', function (event) {
         return _this3.prevSlide(event);
-      });
+      }, false);
       this.next.addEventListener('click', function (event) {
         return _this3.nextSlide(event);
-      });
+      }, false);
     }
   }, {
     key: "getCenterElem",
@@ -239,11 +242,17 @@ var SliderCarousel = /*#__PURE__*/function () {
       return this.options.loop ? this.options.position.master >= -Math.floor(this.slidesToShow / 2) && this.options.position.master < this.slides.master.length - Math.floor(this.slidesToShow / 2) ? this.slides.master[this.options.position.master + Math.floor(this.slidesToShow / 2)] : this.slides.slave[this.options.position.slave + Math.floor(this.slidesToShow / 2)] : this.slides[this.options.position + Math.floor(this.slidesToShow / 2)];
     }
   }, {
+    key: "getCurrentElem",
+    value: function getCurrentElem() {
+      return this.options.loop ? this.options.position.master >= 0 && this.options.position.master < this.slides.master.length ? this.slides.master[this.options.position.master] : this.slides.slave[this.options.position.slave] : this.slides[this.options.position];
+    }
+  }, {
     key: "nextSlide",
     value: function nextSlide(event) {
       event ? event.preventDefault() : null;
       if (this.options.pagination) this.changeDot(false);
       if (this.options.showCenter) this.options.showCenter[1](this.getCenterElem());
+      if (this.options.showCurrent) this.options.showCurrent[1](this.getCurrentElem());
 
       if (this.options.loop) {
         ++this.options.position.master;
@@ -271,6 +280,7 @@ var SliderCarousel = /*#__PURE__*/function () {
       }
 
       if (this.options.showCenter) this.options.showCenter[0](this.getCenterElem());
+      if (this.options.showCurrent) this.options.showCurrent[0](this.getCurrentElem());
       if (this.options.slideCounter) this.setSlideCounter();
       if (this.options.pagination) this.changeDot(true);
     }
@@ -296,6 +306,7 @@ var SliderCarousel = /*#__PURE__*/function () {
       event ? event.preventDefault() : null;
       if (this.options.pagination) this.changeDot(false);
       if (this.options.showCenter) this.options.showCenter[1](this.getCenterElem());
+      if (this.options.showCurrent) this.options.showCurrent[1](this.getCurrentElem());
 
       if (this.options.loop) {
         --this.options.position.master;
@@ -323,6 +334,7 @@ var SliderCarousel = /*#__PURE__*/function () {
       }
 
       if (this.options.showCenter) this.options.showCenter[0](this.getCenterElem());
+      if (this.options.showCurrent) this.options.showCurrent[0](this.getCurrentElem());
       if (this.options.slideCounter) this.setSlideCounter();
       if (this.options.pagination) this.changeDot(true);
     }
@@ -433,6 +445,18 @@ var SliderCarousel = /*#__PURE__*/function () {
           }
 
           _this5.options.showCenter[0](_this5.getCenterElem());
+        }
+
+        if (_this5.options.showCurrent) {
+          if (_this5.options.loop) {
+            _this5.slides.master.forEach(_this5.options.showCurrent[1]);
+
+            _this5.slides.slave.forEach(_this5.options.showCurrent[1]);
+          } else {
+            _this5.slides.forEach(_this5.options.showCurrent[1]);
+          }
+
+          _this5.options.showCurrent[0](_this5.getCenterElem());
         }
 
         _this5.resetSlider();
@@ -797,6 +821,128 @@ var popupControl = function popupControl() {
 
 /***/ }),
 
+/***/ "./modules/repairTypesControl.js":
+/*!***************************************!*\
+  !*** ./modules/repairTypesControl.js ***!
+  \***************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
+/* harmony export */ });
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var repairTypesControl = function repairTypesControl(Slider, style) {
+  var position = 0,
+      sum = 0;
+
+  var repairTypes = document.querySelector('.repair-types'),
+      navListRepair = repairTypes.querySelector('.nav-list-repair'),
+      navItems = _toConsumableArray(navListRepair.children),
+      typesRepairItems = _toConsumableArray(repairTypes.querySelector('.repair-types-slider').children),
+      nextNavItems = document.getElementById('nav-arrow-repair-right_base'),
+      prevNavItems = document.getElementById('nav-arrow-repair-left_base'),
+      slidersLastPosition = [],
+      sizesNavItems = [0],
+      showHideArrow = function showHideArrow() {
+    if (position === 0) prevNavItems.style.display = 'none';
+    if (position === navItems.length - 1) nextNavItems.style.display = 'none';
+    if (prevNavItems.style.display === 'none' && position > 0) prevNavItems.style.display = 'block';
+    if (nextNavItems.style.display === 'none' && position < navItems.length - 1) nextNavItems.style.display = 'block';
+  };
+
+  showHideArrow();
+  navItems.forEach(function (item, index) {
+    if (item.classList.contains('active')) typesRepairItems[index].classList.add('active-slider');
+    slidersLastPosition.push(0);
+    sum += item.offsetWidth + 10;
+    sizesNavItems.push(sum);
+  });
+  var repairTypesSlider = new Slider({
+    main: '.repair-types-slider',
+    wrap: '.active-slider',
+    prev: '#repair-types-arrow_left',
+    next: '#repair-types-arrow_right',
+    slideCounter: '#repair-counter',
+    currentCount: '.slider-counter-content__current',
+    totalCount: '.slider-counter-content__total',
+    style: style,
+    position: position,
+    slidesToShow: 1
+  });
+  repairTypesSlider.init();
+  typesRepairItems.forEach(function (item) {
+    repairTypesSlider.wrap = item;
+    repairTypesSlider.slides = _toConsumableArray(repairTypesSlider.wrap.children);
+    repairTypesSlider.addGloClass();
+  });
+  repairTypesSlider.wrap = repairTypes.querySelector('.active-slider');
+  repairTypesSlider.slides = _toConsumableArray(repairTypesSlider.wrap.children);
+  repairTypes.addEventListener('click', function (_ref) {
+    var target = _ref.target;
+    var repairTypesNavItem = target.closest('.repair-types-nav__item');
+
+    if (target.matches('#nav-arrow-repair-right_base, #nav-arrow-repair-left_base')) {
+      if (target.matches('#nav-arrow-repair-right_base')) {
+        if (position < navItems.length - 1) ++position;
+      } else {
+        if (position > 0) --position;
+      }
+
+      repairTypesNavItem = navItems[position];
+    }
+
+    if (repairTypesNavItem) {
+      if (!repairTypesNavItem.classList.contains('active')) {
+        var indexCurrentItem = navItems.indexOf(repairTypes.querySelector('.active')),
+            indexNewItem = navItems.indexOf(repairTypesNavItem);
+        position = indexNewItem;
+
+        if (innerWidth <= 1024) {
+          navListRepair.style.transform = "translateX(".concat(-sizesNavItems[position], "px)");
+          showHideArrow();
+        }
+
+        navItems[indexCurrentItem].classList.remove('active');
+        typesRepairItems[indexCurrentItem].classList.remove('active-slider');
+        repairTypesNavItem.classList.add('active');
+        typesRepairItems[indexNewItem].classList.add('active-slider');
+        slidersLastPosition[indexCurrentItem] = repairTypesSlider.options.position;
+        repairTypesSlider.options.position = slidersLastPosition[indexNewItem];
+        repairTypesSlider.wrap = repairTypes.querySelector('.active-slider');
+        repairTypesSlider.slides = _toConsumableArray(repairTypesSlider.wrap.children);
+        repairTypesSlider.setStartPosition();
+        repairTypesSlider.setSlideCounter();
+      }
+    }
+  });
+  window.addEventListener('resize', function () {
+    if (innerWidth > 1024) {
+      nextNavItems.style.display = '';
+      prevNavItems.style.display = '';
+      navListRepair.style.transform = '';
+    } else {
+      navListRepair.style.transform = "translateX(".concat(-sizesNavItems[position], "px)");
+      showHideArrow();
+    }
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (repairTypesControl);
+
+/***/ }),
+
 /***/ "./modules/sendForm.js":
 /*!*****************************!*\
   !*** ./modules/sendForm.js ***!
@@ -946,13 +1092,21 @@ var setTransparencyPosition = function setTransparencyPosition(slider) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "transparencySliderStyles": function() { return /* binding */ transparencySliderStyles; }
+/* harmony export */   "transparencySliderStyles": function() { return /* binding */ transparencySliderStyles; },
+/* harmony export */   "repairTypesSliderStyles": function() { return /* binding */ repairTypesSliderStyles; }
 /* harmony export */ });
 var transparencySliderStyles = function transparencySliderStyles(example, widthSlide) {
   var style = document.getElementById("glo-".concat(example, "-slider-style")) || document.createElement('style');
   style.id = "glo-".concat(example, "-slider-style");
   document.body.append(style);
   style.textContent = " .glo-".concat(example, "-slider {\n        display: flex !important;\n        overflow: hidden !important;\n      }\n      .glo-").concat(example, "-slider__wrap {\n        position: relative !important;\n        display: flex !important;\n        flex-wrap: nowrap !important;\n        width: 100% !important;\n        transition: transform 0.5s !important;\n        will-change: transform !important;\n        overflow: initial !important;\n      }\n      .glo-").concat(example, "-slider__item {\n        display: flex !important;\n        flex: 0 0 ").concat(widthSlide, "% !important;\n        position: static !important;\n        transform: translate(0, 0) !important;\n        width: 100% !important;\n        transition: none !important;\n        justify-content: flex-start !important;\n      }");
+};
+
+var repairTypesSliderStyles = function repairTypesSliderStyles(example, widthSlide) {
+  var style = document.getElementById("glo-".concat(example, "-slider-style")) || document.createElement('style');
+  style.id = "glo-".concat(example, "-slider-style");
+  document.body.append(style);
+  style.textContent = " .glo-".concat(example, "-slider {\n        overflow: hidden !important;\n        position: relative !important;\n      }\n      .glo-").concat(example, "-slider__wrap {\n        position: absolute !important;\n        display: flex !important;\n        width: 100% !important;\n        transition: 0.5s !important;\n        will-change: opacity, transform !important;\n        overflow: initial !important;\n        opacity: 0;\n      }\n      .glo-").concat(example, "-slider__wrap.active-slider {\n        opacity: 1;\n      }\n      .glo-").concat(example, "-slider__wrap.glo-").concat(example, "-slider__wrap_slave {\n        position: absolute !important;\n        top: 0 !important;\n      }\n      .glo-").concat(example, "-slider__item {\n        display: flex !important;\n        flex: 0 0 ").concat(widthSlide, "% !important;\n        position: static !important;\n        transform: translate(0, 0) !important;\n        width: 100% !important;\n        transition: none !important;\n        justify-content: flex-start !important;\n      }");
 };
 
 
@@ -1067,6 +1221,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_successMessage__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./modules/successMessage */ "./modules/successMessage.js");
 /* harmony import */ var _modules_faqAccordion__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./modules/faqAccordion */ "./modules/faqAccordion.js");
 /* harmony import */ var _modules_setSlidersPosition__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./modules/setSlidersPosition */ "./modules/setSlidersPosition.js");
+/* harmony import */ var _modules_repairTypesControl__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./modules/repairTypesControl */ "./modules/repairTypesControl.js");
+
 
 
 
@@ -1152,7 +1308,9 @@ var popupTransparencySlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODU
   slidesToShow: 1
 });
 popupTransparencySlider.init();
-(0,_modules_setSlidersPosition__WEBPACK_IMPORTED_MODULE_13__.setTransparencyPosition)(popupTransparencySlider);
+(0,_modules_setSlidersPosition__WEBPACK_IMPORTED_MODULE_13__.setTransparencyPosition)(popupTransparencySlider); // Repair Types Control
+
+(0,_modules_repairTypesControl__WEBPACK_IMPORTED_MODULE_14__["default"])(_modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["default"], _modules_sliderStyles__WEBPACK_IMPORTED_MODULE_7__.repairTypesSliderStyles);
 }();
 /******/ })()
 ;
