@@ -3,6 +3,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
     <title>Управление базой данных</title>
+    <script>
+      const cookieState = () => Object.assign(...document.cookie.split('; ').map(item => {
+        const obj = {};
+
+        obj[item.split('=')[0]] = item.split('=')[1];
+        return obj;
+      }));
+
+      if (location.pathname === '/admin/table.html' && !cookieState().admin) location = './';
+    </script>
   <script defer="defer" src="./js/main.js"></script><link href="./styles/main.css" rel="stylesheet"></head>
   <body>
     <main class="main">

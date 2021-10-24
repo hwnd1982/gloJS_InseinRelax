@@ -893,6 +893,91 @@ var faqAccordion = function faqAccordion(minimizeAll) {
 
 /***/ }),
 
+/***/ "./modules/formInputHandler.js":
+/*!*************************************!*\
+  !*** ./modules/formInputHandler.js ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
+/* harmony export */ });
+var formInputHandler = function formInputHandler() {
+  document.addEventListener('input', function (_ref) {
+    var target = _ref.target;
+
+    if (!target.matches('input[name="name"], input[name="phone"]')) {
+      return;
+    } else {
+      if (target.matches('input[name="name"]')) {
+        target.value = target.value.replace(/[^а-яё\s]+/gi, '');
+
+        if (target.classList.contains('invalid')) {
+          if (target.value.length < 2) {
+            if (target.previousElementSibling) {
+              target.previousElementSibling.innerHTML = "\n                  <sup>*</sup>\n                  \u041D\u0435 \u043C\u0435\u043D\u044C\u0448\u0435 2\u0445 \u0431\u0443\u043A\u0432...\n                ";
+            }
+          } else {
+            target.classList.remove('invalid');
+
+            if (target.previousElementSibling) {
+              target.previousElementSibling.innerHTML = "\n                  <sup>*</sup>\n                  \u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0432\u0430\u0448\u0435 \u0438\u043C\u044F:\n                ";
+              target.previousElementSibling.style.color = '';
+              target.previousElementSibling.style.borderBottom = '';
+            }
+          }
+        }
+      }
+
+      if (target.matches('input[name="phone"]')) {
+        if (target.classList.contains('invalid')) {
+          if (target.value.trim().length < 18) {
+            if (target.previousElementSibling) {
+              target.previousElementSibling.innerHTML = "\n                  <sup>*</sup>\n                  \u041D\u0435 \u0432\u0435\u0440\u043D\u044B\u0439 \u0444\u043E\u0440\u043C\u0430\u0442...\n                ";
+            }
+          } else {
+            target.classList.remove('invalid');
+
+            if (target.previousElementSibling) {
+              target.previousElementSibling.innerHTML = "\n                  <sup>*</sup>\n                  \u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0432\u0430\u0448 \u043D\u043E\u043C\u0435\u0440:\n                ";
+              target.previousElementSibling.style.color = '';
+              target.previousElementSibling.style.borderBottom = '';
+            }
+          }
+        }
+      }
+    }
+  });
+  document.addEventListener('change', function (_ref2) {
+    var target = _ref2.target;
+
+    if (!target.matches('input[name="name"], input.checkbox__input')) {
+      return;
+    }
+
+    if (target.matches('input[name="name"]')) {
+      target.value = target.value.replace(/([-()@_.!~*'])(?=[-()@_.!~*']*\1)/g, '').replace(/([\s])(?=[\s]*\1)/g, '').replace(/^([\s-]*)|([\s-]*)$/g, '').replace(/[^-\s]+/gi, function (str) {
+        return str[0].toUpperCase() + str.slice(1).toLowerCase();
+      });
+    }
+
+    if (target.matches('input.checkbox__input')) {
+      var checkBtn = target.closest('input.checkbox__input');
+
+      if (target.closest('input.checkbox__input:checked')) {
+        checkBtn.nextElementSibling.style.border = '';
+        checkBtn.classList.remove('invalid');
+      }
+    }
+  }, true);
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (formInputHandler);
+
+/***/ }),
+
 /***/ "./modules/formulaPopupDesktop.js":
 /*!****************************************!*\
   !*** ./modules/formulaPopupDesktop.js ***!
@@ -1339,15 +1424,46 @@ var sendForm = function sendForm() {
   };
 
   document.body.addEventListener('submit', function (event) {
-    var form = event.target;
-    event.preventDefault();
-    if (checkFormData(form)) return;
-    var formData = new FormData(form),
+    var form = event.target,
+        formData = new FormData(form),
         body = {};
     var dataValidation = true,
         focusInput = false;
+    event.preventDefault();
     formData.forEach(function (value, key) {
-      if (!value.trim()) dataValidation = false;
+      var input = form.querySelector("input[name=\"".concat(key, "\"]"));
+
+      if (key === 'name' && value.trim().length < 2) {
+        dataValidation = false;
+        input.classList.add('invalid');
+
+        if (value.trim().length < 2 && value.trim()) {
+          if (input.previousElementSibling) {
+            input.previousElementSibling.innerHTML = "\n              <sup>*</sup>\n              \u041D\u0435 \u043C\u0435\u043D\u044C\u0448\u0435 2\u0445 \u0431\u0443\u043A\u0432...\n            ";
+          }
+        }
+
+        if (input.previousElementSibling) {
+          input.previousElementSibling.style.color = 'rgb(244, 137, 34)';
+          input.previousElementSibling.style.borderBottom = '1px solid';
+        }
+      }
+
+      if (key === 'phone' && value.trim().length < 18) {
+        dataValidation = false;
+        input.classList.add('invalid');
+
+        if (value.trim().length < 18 && value.trim()) {
+          if (input.previousElementSibling) {
+            input.previousElementSibling.innerHTML = "\n                <sup>*</sup>\n                \u041D\u0435 \u0432\u0435\u0440\u043D\u044B\u0439 \u0444\u043E\u0440\u043C\u0430\u0442...\n              ";
+          }
+        }
+
+        if (input.previousElementSibling) {
+          input.previousElementSibling.style.color = 'rgb(244, 137, 34)';
+          input.previousElementSibling.style.borderBottom = '1px solid';
+        }
+      }
 
       if (!dataValidation && !focusInput) {
         form.querySelector("input[name=\"".concat(key, "\"]")).focus();
@@ -1357,6 +1473,14 @@ var sendForm = function sendForm() {
       body[key] = value;
     });
     if (!dataValidation) return;
+
+    if (checkFormData(form)) {
+      var checkBtn = form.querySelector('input.checkbox__input');
+      checkBtn.classList.add('invalid');
+      checkBtn.nextElementSibling.style.border = '3px solid #f48922';
+      return;
+    }
+
     var statusMessage = form.appendChild(document.createElement('div'));
     statusMessage.style.cssText = " \n      position: absolute;\n      left: 50%;\n      top: 50%;\n      transform: translate(-50%, -50%);\n      height: 150px;\n    ";
     statusMessage.innerHTML = loadMessage;
@@ -2397,7 +2521,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_setSlidersPosition__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./modules/setSlidersPosition */ "./modules/setSlidersPosition.js");
 /* harmony import */ var _modules_repairTypesControl__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./modules/repairTypesControl */ "./modules/repairTypesControl.js");
 /* harmony import */ var _modules_dataHandlerPopupRepairTypes__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./modules/dataHandlerPopupRepairTypes */ "./modules/dataHandlerPopupRepairTypes.js");
-// import "core-js/stable";
+/* harmony import */ var _modules_formInputHandler__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./modules/formInputHandler */ "./modules/formInputHandler.js");
+
 
 
 
@@ -2534,7 +2659,9 @@ var mobilePortfolioSlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE
 });
 mobilePortfolioSlider.init(); // Data Handler Popup Repair Types
 
-(0,_modules_dataHandlerPopupRepairTypes__WEBPACK_IMPORTED_MODULE_16__["default"])();
+(0,_modules_dataHandlerPopupRepairTypes__WEBPACK_IMPORTED_MODULE_16__["default"])(); // formInputHandler
+
+(0,_modules_formInputHandler__WEBPACK_IMPORTED_MODULE_17__["default"])();
 }();
 /******/ })()
 ;

@@ -41,18 +41,50 @@ const sendForm = (
     checkFormData = form => !form.querySelector('input.checkbox__input:checked');
 
   document.body.addEventListener('submit', event => {
-    const form = event.target;
-
-    event.preventDefault();
-    if (checkFormData(form)) return;
-
     const
+      form = event.target,
       formData = new FormData(form),
       body = {};
-    let dataValidation = true, focusInput = false;
 
+    let dataValidation = true, focusInput = false;
+    event.preventDefault();
     formData.forEach((value, key) => {
-      if (!value.trim()) dataValidation = false;
+      const input = form.querySelector(`input[name="${key}"]`);
+
+      if (key === 'name' && value.trim().length < 2) {
+        dataValidation = false;
+        input.classList.add('invalid');
+        if (value.trim().length < 2 && value.trim()) {
+          if (input.previousElementSibling) {
+            input.previousElementSibling.innerHTML =
+            `
+              <sup>*</sup>
+              Не меньше 2х букв...
+            `;
+          }
+        }
+        if (input.previousElementSibling) {
+          input.previousElementSibling.style.color = 'rgb(244, 137, 34)';
+          input.previousElementSibling.style.borderBottom = '1px solid';
+        }
+      }
+      if (key === 'phone' && value.trim().length < 18) {
+        dataValidation = false;
+        input.classList.add('invalid');
+        if (value.trim().length < 18 && value.trim()) {
+          if (input.previousElementSibling) {
+            input.previousElementSibling.innerHTML =
+              `
+                <sup>*</sup>
+                Не верный формат...
+              `;
+          }
+        }
+        if (input.previousElementSibling) {
+          input.previousElementSibling.style.color = 'rgb(244, 137, 34)';
+          input.previousElementSibling.style.borderBottom = '1px solid';
+        }
+      }
       if (!dataValidation && !focusInput) {
         form.querySelector(`input[name="${key}"]`).focus();
         focusInput = true;
@@ -60,6 +92,13 @@ const sendForm = (
       body[key] = value;
     });
     if (!dataValidation) return;
+    if (checkFormData(form)) {
+      const checkBtn = form.querySelector('input.checkbox__input');
+
+      checkBtn.classList.add('invalid');
+      checkBtn.nextElementSibling.style.border = '3px solid #f48922';
+      return;
+    }
 
     const statusMessage = form.appendChild(document.createElement('div'));
 

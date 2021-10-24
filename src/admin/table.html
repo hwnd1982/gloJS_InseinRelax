@@ -6,6 +6,16 @@
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
     <title>Управление базой данных</title>
+    <script>
+      const cookieState = () => Object.assign(...document.cookie.split('; ').map(item => {
+        const obj = {};
+
+        obj[item.split('=')[0]] = item.split('=')[1];
+        return obj;
+      }));
+
+      if (location.pathname === '/admin/table.html' && !cookieState().admin) location = './';
+    </script>
   </head>
   <body>
     <main class="main">
