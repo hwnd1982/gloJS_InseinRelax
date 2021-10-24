@@ -6,6 +6,7 @@ class SliderCarousel {
     prev,
     slide,
     style,
+    px = false,
     slideCounter,
     currentCount,
     totalCount,
@@ -61,10 +62,11 @@ class SliderCarousel {
       totalCount: slideCounterElem ? slideCounterElem.querySelector(totalCount) : null,
       style,
       loop,
+      px,
       pagination,
       autoplay: loop ? autoplay : loop,
       time,
-      widthSlide: Math.floor(100 / this.slidesToShow),
+      widthSlide: px ? px : Math.floor(100 / this.slidesToShow),
       maxPosition: (loop ? this.slides.master.length : this.slides.length) - this.slidesToShow
     };
   }
@@ -116,14 +118,17 @@ class SliderCarousel {
         this.options.position.master = this.slides.master.length +
         (this.slides.master.length + this.options.position.master);
       }
-      this.wrap.master.style.transform = `translateX(${-this.options.widthSlide * this.options.position.master}%)`;
-      this.wrap.slave.style.transform = `translateX(${-this.options.widthSlide * this.options.position.slave}%)`;
+      this.wrap.master.style.transform = `translateX(${-this.options.widthSlide * this.options.position.master}${
+        this.options.px ? 'px' : '%'})`;
+      this.wrap.slave.style.transform = `translateX(${-this.options.widthSlide * this.options.position.slave}${
+        this.options.px ? 'px' : '%'})`;
     } else {
       if (this.options.position === 0) this.prev.style.display = 'none';
       else this.prev.style.display = 'flex';
       if (this.options.position === this.slides.length - this.slidesToShow) this.next.style.display = 'none';
       else this.next.style.display = 'flex';
-      this.wrap.style.transform = `translateX(${-this.options.widthSlide * this.options.position}%)`;
+      this.wrap.style.transform = `translateX(${-this.options.widthSlide * this.options.position}${
+        this.options.px ? 'px' : '%'})`;
     }
   }
   addGloClass() {
@@ -170,7 +175,7 @@ class SliderCarousel {
           }
           .glo-${this.example}-slider__item {
             display: flex !important;
-            flex: 0 0 ${this.options.widthSlide}% !important;
+            flex: 0 0 ${this.options.widthSlide}${this.options.px ? 'px' : '%'} !important;
             position: static !important;
             transform: translate(0, 0) !important;
             width: 100% !important;
@@ -295,12 +300,15 @@ class SliderCarousel {
         this.options.position.slave = -this.slidesToShow -
         (2 * this.slides.slave.length - this.slidesToShow - this.options.position.slave);
       }
-      this.wrap.master.style.transform = `translateX(${-this.options.widthSlide * this.options.position.master}%)`;
-      this.wrap.slave.style.transform = `translateX(${-this.options.widthSlide * this.options.position.slave}%)`;
+      this.wrap.master.style.transform = `translateX(${-this.options.widthSlide * this.options.position.master}${
+        this.options.px ? 'px' : '%'})`;
+      this.wrap.slave.style.transform = `translateX(${-this.options.widthSlide * this.options.position.slave}${
+        this.options.px ? 'px' : '%'})`;
     } else {
       if (this.options.position <= this.slides.length - this.slidesToShow) {
         ++this.options.position;
-        this.wrap.style.transform = `translateX(${-this.options.widthSlide * this.options.position}%)`;
+        this.wrap.style.transform = `translateX(${-this.options.widthSlide * this.options.position}${
+          this.options.px ? 'px' : '%'})`;
         if (this.options.position > 0 && this.prev.style.display === 'none') this.prev.style.display = 'flex';
         if (this.options.position === this.slides.length - this.slidesToShow) this.next.style.display = 'none';
       }
@@ -346,12 +354,15 @@ class SliderCarousel {
         this.options.position.slave = this.slides.master.length +
         (this.slides.slave.length + this.options.position.slave);
       }
-      this.wrap.master.style.transform = `translateX(${-this.options.widthSlide * this.options.position.master}%)`;
-      this.wrap.slave.style.transform = `translateX(${-this.options.widthSlide * this.options.position.slave}%)`;
+      this.wrap.master.style.transform = `translateX(${-this.options.widthSlide * this.options.position.master}${
+        this.options.px ? 'px' : '%'})`;
+      this.wrap.slave.style.transform = `translateX(${-this.options.widthSlide * this.options.position.slave}${
+        this.options.px ? 'px' : '%'})`;
     } else {
       if (this.options.position >= 0) {
         --this.options.position;
-        this.wrap.style.transform = `translateX(${-this.options.widthSlide * this.options.position}%)`;
+        this.wrap.style.transform = `translateX(${-this.options.widthSlide * this.options.position}${
+          this.options.px ? 'px' : '%'})`;
         if (this.options.position < this.slides.length - this.slidesToShow && this.next.style.display === 'none')
           this.next.style.display = 'flex';
         if (this.options.position === 0) this.prev.style.display = 'none';
@@ -428,13 +439,17 @@ class SliderCarousel {
           allResponse.forEach((item, index) => {
             if (widthWindow < item) {
               this.slidesToShow = this.responsive[index].slidesToShow;
-              this.options.widthSlide = Math.floor(100 / this.slidesToShow);
+              this.options.widthSlide = this.options.px ? this.options.px : Math.floor(100 / this.slidesToShow);
+              // replace with universally solution
+              if (this.options.px) this.options.position = 0;
               this.addStyle();
             }
           });
         } else {
           this.slidesToShow = slidersToShowDefault;
-          this.options.widthSlide = Math.floor(100 / this.slidesToShow);
+          this.options.widthSlide = this.options.px ? this.options.px : Math.floor(100 / this.slidesToShow);
+          // replace with universally solution
+          if (this.options.px) this.options.position = 0;
           if (this.options.resetDefault)
             this.options.loop ? this.options.position.master = 0 : this.options.position = 0;
           this.addStyle();

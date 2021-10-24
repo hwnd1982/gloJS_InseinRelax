@@ -38,6 +38,8 @@ var SliderCarousel = /*#__PURE__*/function () {
         prev = _ref.prev,
         slide = _ref.slide,
         style = _ref.style,
+        _ref$px = _ref.px,
+        px = _ref$px === void 0 ? false : _ref$px,
         slideCounter = _ref.slideCounter,
         currentCount = _ref.currentCount,
         totalCount = _ref.totalCount,
@@ -101,10 +103,11 @@ var SliderCarousel = /*#__PURE__*/function () {
       totalCount: slideCounterElem ? slideCounterElem.querySelector(totalCount) : null,
       style: style,
       loop: loop,
+      px: px,
       pagination: pagination,
       autoplay: loop ? autoplay : loop,
       time: time,
-      widthSlide: Math.floor(100 / this.slidesToShow),
+      widthSlide: px ? px : Math.floor(100 / this.slidesToShow),
       maxPosition: (loop ? this.slides.master.length : this.slides.length) - this.slidesToShow
     };
   }
@@ -174,12 +177,12 @@ var SliderCarousel = /*#__PURE__*/function () {
           this.options.position.master = this.slides.master.length + (this.slides.master.length + this.options.position.master);
         }
 
-        this.wrap.master.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position.master, "%)");
-        this.wrap.slave.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position.slave, "%)");
+        this.wrap.master.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position.master).concat(this.options.px ? 'px' : '%', ")");
+        this.wrap.slave.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position.slave).concat(this.options.px ? 'px' : '%', ")");
       } else {
         if (this.options.position === 0) this.prev.style.display = 'none';else this.prev.style.display = 'flex';
         if (this.options.position === this.slides.length - this.slidesToShow) this.next.style.display = 'none';else this.next.style.display = 'flex';
-        this.wrap.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position, "%)");
+        this.wrap.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position).concat(this.options.px ? 'px' : '%', ")");
       }
     }
   }, {
@@ -220,7 +223,7 @@ var SliderCarousel = /*#__PURE__*/function () {
         var style = document.getElementById("glo-".concat(this.example, "-slider-style")) || document.createElement('style');
         style.id = "glo-".concat(this.example, "-slider-style");
         document.body.append(style);
-        style.textContent = " .glo-".concat(this.example, "-slider {\n            overflow: hidden !important;\n            position: relative !important;\n          }\n          .glo-").concat(this.example, "-slider__wrap {\n            position: relative !important;\n            display: flex !important;\n            width: 100% !important;\n            transition: transform 0.5s !important;\n            will-change: transform !important;\n            overflow: initial !important;\n          }\n          .glo-").concat(this.example, "-slider__wrap.glo-").concat(this.example, "-slider__wrap_slave {\n            position: absolute !important;\n            top: 0 !important;\n          }\n          .glo-").concat(this.example, "-slider__item {\n            display: flex !important;\n            flex: 0 0 ").concat(this.options.widthSlide, "% !important;\n            position: static !important;\n            transform: translate(0, 0) !important;\n            width: 100% !important;\n            transition: none !important;\n            justify-content: flex-start !important;\n          }\n          .glo-").concat(this.example, "-slider__next,\n          .glo-").concat(this.example, "-slider__prev {\n            position: absolute;\n            transform: translate(0, -50%);\n            top: 50%;\n            border: 20px solid transparent;\n            background: transparent;\n            cursor: pointer;\n            z-index: 10;\n          }\n          .glo-").concat(this.example, "-slider__next {\n            right: 5px;\n            border-left-color: #19b5fe;\n          }\n          .glo-").concat(this.example, "-slider__prev {\n            left: 5px;\n            border-right-color: #19b5fe;\n          }\n          @media (max-width: 690px) {\n            .glo-").concat(this.example, "-slider__next,\n            .glo-").concat(this.example, "-slider__prev {\n              border: 15px solid transparent;\n            }\n            .glo-").concat(this.example, "-slider__next {\n              right: 5px;\n              border-left-color: #19b5fe;\n            }\n            .glo-").concat(this.example, "-slider__prev {\n              left: 5px;\n              border-right-color: #19b5fe;\n            }\n          }\n          @media (max-width: 448px) {\n            .glo-").concat(this.example, "-slider__next,\n            .glo-").concat(this.example, "-slider__prev {\n              border: 10px solid transparent;\n            }\n            .glo-").concat(this.example, "-slider__next {\n              right: 5px;\n              border-left-color: #19b5fe;\n            }\n            .glo-").concat(this.example, "-slider__prev {\n              left: 5px;\n              border-right-color: #19b5fe;\n            }\n          }\n        ");
+        style.textContent = " .glo-".concat(this.example, "-slider {\n            overflow: hidden !important;\n            position: relative !important;\n          }\n          .glo-").concat(this.example, "-slider__wrap {\n            position: relative !important;\n            display: flex !important;\n            width: 100% !important;\n            transition: transform 0.5s !important;\n            will-change: transform !important;\n            overflow: initial !important;\n          }\n          .glo-").concat(this.example, "-slider__wrap.glo-").concat(this.example, "-slider__wrap_slave {\n            position: absolute !important;\n            top: 0 !important;\n          }\n          .glo-").concat(this.example, "-slider__item {\n            display: flex !important;\n            flex: 0 0 ").concat(this.options.widthSlide).concat(this.options.px ? 'px' : '%', " !important;\n            position: static !important;\n            transform: translate(0, 0) !important;\n            width: 100% !important;\n            transition: none !important;\n            justify-content: flex-start !important;\n          }\n          .glo-").concat(this.example, "-slider__next,\n          .glo-").concat(this.example, "-slider__prev {\n            position: absolute;\n            transform: translate(0, -50%);\n            top: 50%;\n            border: 20px solid transparent;\n            background: transparent;\n            cursor: pointer;\n            z-index: 10;\n          }\n          .glo-").concat(this.example, "-slider__next {\n            right: 5px;\n            border-left-color: #19b5fe;\n          }\n          .glo-").concat(this.example, "-slider__prev {\n            left: 5px;\n            border-right-color: #19b5fe;\n          }\n          @media (max-width: 690px) {\n            .glo-").concat(this.example, "-slider__next,\n            .glo-").concat(this.example, "-slider__prev {\n              border: 15px solid transparent;\n            }\n            .glo-").concat(this.example, "-slider__next {\n              right: 5px;\n              border-left-color: #19b5fe;\n            }\n            .glo-").concat(this.example, "-slider__prev {\n              left: 5px;\n              border-right-color: #19b5fe;\n            }\n          }\n          @media (max-width: 448px) {\n            .glo-").concat(this.example, "-slider__next,\n            .glo-").concat(this.example, "-slider__prev {\n              border: 10px solid transparent;\n            }\n            .glo-").concat(this.example, "-slider__next {\n              right: 5px;\n              border-left-color: #19b5fe;\n            }\n            .glo-").concat(this.example, "-slider__prev {\n              left: 5px;\n              border-right-color: #19b5fe;\n            }\n          }\n        ");
 
         if (this.dots) {
           style.textContent += " .glo-".concat(this.example, "-slider__dots {\n              position: absolute;\n              bottom: 20px;\n              width: 100%;\n              margin: 20px auto 0;\n              display: -webkit-box;\n              display: -ms-flexbox;\n              display: flex;\n              justify-content: center;\n              z-index: 5;\n            }\n            .glo-").concat(this.example, "-slider__dots .dot {\n              cursor: pointer;\n              height: 16px;\n              width: 16px;\n              margin: 0 10px;\n              border-radius: 50%;\n              border: solid #fff;\n              display: inline-block;\n              transition: background-color, transform 0.4s, -webkit-transform 0.4s;\n            }\n            .glo-").concat(this.example, "-slider__dots .dot-active {\n              background-color: #19b5fe;\n              transform: scale(1.2);\n            }\n            .glo-").concat(this.example, "-slider__dots .dot:hover {\n              background-color: #53c6fe;\n              transform: scale(1.2);\n            }");
@@ -271,12 +274,12 @@ var SliderCarousel = /*#__PURE__*/function () {
           this.options.position.slave = -this.slidesToShow - (2 * this.slides.slave.length - this.slidesToShow - this.options.position.slave);
         }
 
-        this.wrap.master.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position.master, "%)");
-        this.wrap.slave.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position.slave, "%)");
+        this.wrap.master.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position.master).concat(this.options.px ? 'px' : '%', ")");
+        this.wrap.slave.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position.slave).concat(this.options.px ? 'px' : '%', ")");
       } else {
         if (this.options.position <= this.slides.length - this.slidesToShow) {
           ++this.options.position;
-          this.wrap.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position, "%)");
+          this.wrap.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position).concat(this.options.px ? 'px' : '%', ")");
           if (this.options.position > 0 && this.prev.style.display === 'none') this.prev.style.display = 'flex';
           if (this.options.position === this.slides.length - this.slidesToShow) this.next.style.display = 'none';
         }
@@ -325,12 +328,12 @@ var SliderCarousel = /*#__PURE__*/function () {
           this.options.position.slave = this.slides.master.length + (this.slides.slave.length + this.options.position.slave);
         }
 
-        this.wrap.master.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position.master, "%)");
-        this.wrap.slave.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position.slave, "%)");
+        this.wrap.master.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position.master).concat(this.options.px ? 'px' : '%', ")");
+        this.wrap.slave.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position.slave).concat(this.options.px ? 'px' : '%', ")");
       } else {
         if (this.options.position >= 0) {
           --this.options.position;
-          this.wrap.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position, "%)");
+          this.wrap.style.transform = "translateX(".concat(-this.options.widthSlide * this.options.position).concat(this.options.px ? 'px' : '%', ")");
           if (this.options.position < this.slides.length - this.slidesToShow && this.next.style.display === 'none') this.next.style.display = 'flex';
           if (this.options.position === 0) this.prev.style.display = 'none';
         }
@@ -424,14 +427,18 @@ var SliderCarousel = /*#__PURE__*/function () {
           allResponse.forEach(function (item, index) {
             if (widthWindow < item) {
               _this5.slidesToShow = _this5.responsive[index].slidesToShow;
-              _this5.options.widthSlide = Math.floor(100 / _this5.slidesToShow);
+              _this5.options.widthSlide = _this5.options.px ? _this5.options.px : Math.floor(100 / _this5.slidesToShow); // replace with universally solution
+
+              if (_this5.options.px) _this5.options.position = 0;
 
               _this5.addStyle();
             }
           });
         } else {
           _this5.slidesToShow = slidersToShowDefault;
-          _this5.options.widthSlide = Math.floor(100 / _this5.slidesToShow);
+          _this5.options.widthSlide = _this5.options.px ? _this5.options.px : Math.floor(100 / _this5.slidesToShow); // replace with universally solution
+
+          if (_this5.options.px) _this5.options.position = 0;
           if (_this5.options.resetDefault) _this5.options.loop ? _this5.options.position.master = 0 : _this5.options.position = 0;
 
           _this5.addStyle();
@@ -814,6 +821,10 @@ var popupControl = function popupControl() {
       document.querySelector('.popup-consultation').style.visibility = 'visible';
     }
 
+    if (target.matches('.portfolio-slider__slide-frame')) {
+      document.querySelector('.popup-portfolio').style.visibility = 'visible';
+    }
+
     if (target.matches('.close') && target.closest('.popup')) {
       var popup = target.closest('.popup');
       if (!popup.matches('.popup-dialog-menu')) popup.style.visibility = 'hidden';
@@ -1062,8 +1073,21 @@ var sendForm = function sendForm() {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "setTransparencyPosition": function() { return /* binding */ setTransparencyPosition; }
+/* harmony export */   "setTransparencyPosition": function() { return /* binding */ setTransparencyPosition; },
+/* harmony export */   "setPortfolioPosition": function() { return /* binding */ setPortfolioPosition; }
 /* harmony export */ });
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 var setTransparencyPosition = function setTransparencyPosition(slider) {
   var transparency = document.getElementById('transparency');
   transparency.addEventListener('click', function (_ref) {
@@ -1084,6 +1108,41 @@ var setTransparencyPosition = function setTransparencyPosition(slider) {
   });
 };
 
+var setPortfolioPosition = function setPortfolioPosition(slider) {
+  var indexLast = 0;
+
+  var portfolio = document.getElementById('portfolio'),
+      slideFrameList = _toConsumableArray(portfolio.querySelectorAll('.portfolio-slider__slide-frame')),
+      popupPortfolioTextList = _toConsumableArray(document.querySelectorAll('.popup-portfolio-text')),
+      nextPopupBtn = document.getElementById('popup_portfolio_right'),
+      prevPopupBtn = document.getElementById('popup_portfolio_left'),
+      showText = function showText(indexCurrent) {
+    popupPortfolioTextList[indexLast].style.display = 'none';
+    popupPortfolioTextList[indexCurrent].style.display = 'flex';
+    indexLast = indexCurrent;
+  };
+
+  portfolio.addEventListener('click', function (_ref2) {
+    var target = _ref2.target;
+    var item = target.closest('.portfolio-slider__slide-frame');
+
+    if (item) {
+      var indexCurrent = slideFrameList.indexOf(item) % (slideFrameList.length / 2);
+      showText(indexCurrent);
+      slider.options.position = indexCurrent;
+      slider.setStartPosition();
+      slider.resetSlider();
+      slider.setSlideCounter();
+    }
+  });
+  nextPopupBtn.addEventListener('click', function () {
+    return showText(slider.options.position);
+  });
+  prevPopupBtn.addEventListener('click', function () {
+    return showText(slider.options.position);
+  });
+};
+
 
 
 /***/ }),
@@ -1097,7 +1156,9 @@ var setTransparencyPosition = function setTransparencyPosition(slider) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "transparencySliderStyles": function() { return /* binding */ transparencySliderStyles; },
-/* harmony export */   "repairTypesSliderStyles": function() { return /* binding */ repairTypesSliderStyles; }
+/* harmony export */   "repairTypesSliderStyles": function() { return /* binding */ repairTypesSliderStyles; },
+/* harmony export */   "mobilePortfolioSliderStyles": function() { return /* binding */ mobilePortfolioSliderStyles; },
+/* harmony export */   "portfolioSliderStyles": function() { return /* binding */ portfolioSliderStyles; }
 /* harmony export */ });
 var transparencySliderStyles = function transparencySliderStyles(example, widthSlide) {
   var style = document.getElementById("glo-".concat(example, "-slider-style")) || document.createElement('style');
@@ -1111,6 +1172,20 @@ var repairTypesSliderStyles = function repairTypesSliderStyles(example, widthSli
   style.id = "glo-".concat(example, "-slider-style");
   document.body.append(style);
   style.textContent = " .glo-".concat(example, "-slider {\n        overflow: hidden !important;\n        position: relative !important;\n      }\n      .glo-").concat(example, "-slider__wrap {\n        position: absolute !important;\n        display: flex !important;\n        width: 100% !important;\n        transition: 0.5s !important;\n        will-change: opacity, transform !important;\n        overflow: initial !important;\n        opacity: 0;\n      }\n      .glo-").concat(example, "-slider__wrap.active-slider {\n        opacity: 1;\n      }\n      .glo-").concat(example, "-slider__wrap.glo-").concat(example, "-slider__wrap_slave {\n        position: absolute !important;\n        top: 0 !important;\n      }\n      .glo-").concat(example, "-slider__item {\n        display: flex !important;\n        flex: 0 0 ").concat(widthSlide, "% !important;\n        position: static !important;\n        transform: translate(0, 0) !important;\n        width: 100% !important;\n        transition: none !important;\n        justify-content: flex-start !important;\n      }");
+};
+
+var mobilePortfolioSliderStyles = function mobilePortfolioSliderStyles(example, widthSlide) {
+  var style = document.getElementById("glo-".concat(example, "-slider-style")) || document.createElement('style');
+  style.id = "glo-".concat(example, "-slider-style");
+  document.body.append(style);
+  style.textContent = " @media (max-width: 575px) {\n        .glo-".concat(example, "-slider {\n          overflow: hidden !important;\n          position: relative !important;\n          border-radius: 20px;\n          height: 210px;\n        }\n        .glo-").concat(example, "-slider__wrap {\n          position: absolute !important;\n          display: flex !important;\n          width: 100% !important;\n          transition: 0.5s !important;\n          will-change: opacity, transform !important;\n          overflow: initial !important;\n        }\n        .glo-").concat(example, "-slider__wrap.active-slider {\n          opacity: 1;\n        }\n        .glo-").concat(example, "-slider__wrap.glo-").concat(example, "-slider__wrap_slave {\n          position: absolute !important;\n          top: 0 !important;\n        }\n        .glo-").concat(example, "-slider__item {\n          display: flex !important;\n          flex: 0 0 ").concat(widthSlide, "% !important;\n          position: static !important;\n          transform: translate(0, 0) !important;\n          width: 100% !important;\n          transition: none !important;\n          justify-content: flex-start !important;\n        }\n      }");
+};
+
+var portfolioSliderStyles = function portfolioSliderStyles(example, widthSlide) {
+  var style = document.getElementById("glo-".concat(example, "-slider-style")) || document.createElement('style');
+  style.id = "glo-".concat(example, "-slider-style");
+  document.body.append(style);
+  style.textContent = " .glo-".concat(example, "-slider {\n        overflow: hidden !important;\n        position: relative !important;\n        width: 1056px !important;\n        border-radius: 20px !important;\n        margin-left: auto;\n        margin-right: auto;\n      }\n      .glo-").concat(example, "-slider__wrap {\n        position: relative !important;\n        width: 100% !important;\n        transition: 0.5s !important;\n        will-change: opacity, transform !important;\n        overflow: initial !important;\n      }\n      .glo-").concat(example, "-slider__item {\n        display: flex !important;\n        flex: 0 0 ").concat(widthSlide, "px !important;\n      }\n      @media (max-width: 1140px) {\n        .glo-").concat(example, "-slider {\n          width: 704px !important;\n        }\n      }\n      @media (max-width: 900px) {\n        .glo-").concat(example, "-slider {\n          width: 352px !important;\n        }\n      }\n      @media (max-width: 575px) {\n        .glo-").concat(example, "-slider__buttons {\n          display: none !important;\n        }\n      }");
 };
 
 
@@ -1286,7 +1361,6 @@ var reviewsSlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["de
 reviewsSlider.init(); // Transparency Slider
 
 var transparencySlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["default"]({
-  // main: '.transparency-slider-wrap',
   wrap: '.transparency-slider',
   prev: '#transparency-arrow_left',
   next: '#transparency-arrow_right',
@@ -1315,7 +1389,51 @@ var popupTransparencySlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODU
 popupTransparencySlider.init();
 (0,_modules_setSlidersPosition__WEBPACK_IMPORTED_MODULE_13__.setTransparencyPosition)(popupTransparencySlider); // Repair Types Control
 
-(0,_modules_repairTypesControl__WEBPACK_IMPORTED_MODULE_14__["default"])(_modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["default"], _modules_sliderStyles__WEBPACK_IMPORTED_MODULE_7__.repairTypesSliderStyles);
+(0,_modules_repairTypesControl__WEBPACK_IMPORTED_MODULE_14__["default"])(_modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["default"], _modules_sliderStyles__WEBPACK_IMPORTED_MODULE_7__.repairTypesSliderStyles); // Popup Portfolio Slider
+
+var popupPortfolioSlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["default"]({
+  wrap: '.popup-portfolio-slider',
+  prev: '#popup_portfolio_left',
+  next: '#popup_portfolio_right',
+  slideCounter: '#popup-portfolio-counter',
+  currentCount: '.slider-counter-content__current',
+  totalCount: '.slider-counter-content__total',
+  position: 0,
+  slidesToShow: 1
+});
+popupPortfolioSlider.init();
+(0,_modules_setSlidersPosition__WEBPACK_IMPORTED_MODULE_13__.setPortfolioPosition)(popupPortfolioSlider); // Portfolio Slider
+
+var portfolioSlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["default"]({
+  wrap: '.portfolio-slider',
+  prev: '#portfolio-arrow_left',
+  next: '#portfolio-arrow_right',
+  style: _modules_sliderStyles__WEBPACK_IMPORTED_MODULE_7__.portfolioSliderStyles,
+  position: 0,
+  px: 352,
+  slidesToShow: 3,
+  responsive: [{
+    breakpoint: 1140,
+    slidesToShow: 2
+  }, {
+    breakpoint: 900,
+    slidesToShow: 1
+  }]
+});
+portfolioSlider.init(); // Mobile Portfolio Slider
+
+var mobilePortfolioSlider = new _modules_SliderCarousel__WEBPACK_IMPORTED_MODULE_6__["default"]({
+  wrap: '.portfolio-slider-mobile',
+  prev: '#portfolio-arrow-mobile_left',
+  next: '#portfolio-arrow-mobile_right',
+  slideCounter: '#portfolio-counter',
+  style: _modules_sliderStyles__WEBPACK_IMPORTED_MODULE_7__.mobilePortfolioSliderStyles,
+  currentCount: '.slider-counter-content__current',
+  totalCount: '.slider-counter-content__total',
+  position: 0,
+  slidesToShow: 1
+});
+mobilePortfolioSlider.init();
 }();
 /******/ })()
 ;

@@ -12,6 +12,9 @@ const popupControl = () => {
     if (target.matches('.button_wide')) {
       document.querySelector('.popup-consultation').style.visibility = 'visible';
     }
+    if (target.matches('.portfolio-slider__slide-frame')) {
+      document.querySelector('.popup-portfolio').style.visibility = 'visible';
+    }
     if (target.matches('.close') && target.closest('.popup')) {
       const popup = target.closest('.popup');
       if (!popup.matches('.popup-dialog-menu'))
