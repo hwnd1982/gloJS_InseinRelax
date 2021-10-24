@@ -4897,7 +4897,7 @@ div.wave-block:nth-child(17):after {
 
 @media (max-width: 1024px) {
   .popup-repair-types-nav__item {
-    width: 298px;
+    width: 280px;
     height: 37px;
     padding-left: 0;
     text-align: center;
@@ -4906,7 +4906,6 @@ div.wave-block:nth-child(17):after {
 }
 @media (max-width: 575px) {
   .popup-repair-types-nav__item {
-    width: 280px;
     height: 36px;
     padding-left: 0;
     text-align: center;
@@ -6733,7 +6732,8 @@ div.wave-block:nth-child(17):after {
 
 .nav-popup-repair-types {
   position: relative;
-  margin-top: 0 !important;
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
 }
 
 @media (min-width: 1025px) {
@@ -7507,6 +7507,10 @@ div.wave-block:nth-child(17):after {
   top: 0;
   left: 0;
   right: 0;
+}
+
+.popup-repair-types-nav__item.active {
+  border: 3px solid #f48922 !important;
 }
 
 .item-hover span {

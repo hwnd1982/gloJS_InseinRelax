@@ -1,3 +1,5 @@
+// import "core-js/stable";
+import "regenerator-runtime/runtime";
 import './css/style.css';
 import headerContactsAccord from './modules/headerContactsAccord';
 import burgerMenu from './modules/burgerMenu';
@@ -18,7 +20,7 @@ import successMessage from './modules/successMessage';
 import faqAccordion from './modules/faqAccordion';
 import { setTransparencyPosition, setPortfolioPosition } from './modules/setSlidersPosition';
 import repairTypesControl from './modules/repairTypesControl';
-
+import dataHandlerPopupRepairTypes from './modules/dataHandlerPopupRepairTypes';
 // Phone List Active
 headerContactsAccord();
 // Burger Menu Active
@@ -144,3 +146,5 @@ const mobilePortfolioSlider = new SliderCarousel({
   slidesToShow: 1,
 });
 mobilePortfolioSlider.init();
+// Data Handler Popup Repair Types
+dataHandlerPopupRepairTypes();
