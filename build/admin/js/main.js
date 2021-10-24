@@ -940,9 +940,11 @@ if (location.pathname === '/admin/') {
     if (name.value === 'admin' && password.value === '123') {
       setCookie(name.value, true);
       location = './table.html';
-      console.log(cookieState());
     } else {
       deleteCookie('admin');
+      warning.forEach(function (item) {
+        return item.style.display = 'block';
+      });
     }
 
     name.value = '';
@@ -950,27 +952,31 @@ if (location.pathname === '/admin/') {
   });
 }
 
-_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-  return regeneratorRuntime.wrap(function _callee2$(_context2) {
-    while (1) {
-      switch (_context2.prev = _context2.next) {
-        case 0:
-          _context2.t0 = console;
-          _context2.next = 3;
-          return getData();
+if (location.pathname === '/admin/table.html') {
+  _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.t0 = console;
+            _context2.next = 3;
+            return getData();
 
-        case 3:
-          _context2.t1 = _context2.sent;
+          case 3:
+            _context2.t1 = _context2.sent;
 
-          _context2.t0.log.call(_context2.t0, _context2.t1);
+            _context2.t0.log.call(_context2.t0, _context2.t1);
 
-        case 5:
-        case "end":
-          return _context2.stop();
+          case 5:
+          case "end":
+            return _context2.stop();
+        }
       }
-    }
-  }, _callee2);
-}))();
+    }, _callee2);
+  }))();
+
+  console.log(cookieState());
+}
 }();
 /******/ })()
 ;

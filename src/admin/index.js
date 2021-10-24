@@ -34,6 +34,7 @@ const
   };
 
 if (location.pathname === '/admin/') {
+
   warning.forEach(item => item.style.display = 'none');
   button.addEventListener('click', event => {
     event.preventDefault();
@@ -41,16 +42,20 @@ if (location.pathname === '/admin/') {
     if (name.value === 'admin' && password.value === '123') {
       setCookie(name.value, true);
       location = './table.html';
-      console.log(cookieState());
     } else {
       deleteCookie('admin');
+      warning.forEach(item => item.style.display = 'block');
     }
     name.value = '';
     password.value = '';
   });
+
 }
 
-(async () => {
-  console.log(await getData());
-})();
+if (location.pathname === '/admin/table.html') {
 
+  (async () => {
+    console.log(await getData());
+  })();
+  console.log(cookieState());
+}
