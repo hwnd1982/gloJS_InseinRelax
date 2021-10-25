@@ -1,6 +1,374 @@
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./modules/adminPanelHandler.js":
+/*!**************************************!*\
+  !*** ./modules/adminPanelHandler.js ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
+/* harmony export */ });
+/* harmony import */ var _dataRequest__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dataRequest */ "./modules/dataRequest.js");
+/* harmony import */ var _cookieHandler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./cookieHandler */ "./modules/cookieHandler.js");
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+ // GET /api/items - получить список услуг, в query параметр search можно передать поисковый запрос
+// POST /api/items - создать новую услугу, в теле запроса нужно передать объект
+//    { type: string, name: string, units: string, cost: number }
+// GET /api/items/{id} - получить услугу по ID
+// PATCH /api/items/{id} - изменить услугу с ID, в теле запроса нужно передать объект
+//    { type: string, name: string, units: string, cost: number }
+// DELETE /api/items/{id} - удалить услугу по ID
+
+var adminPanelHandler = function adminPanelHandler() {
+  if (location.pathname.includes('/admin/table.html') && !(0,_cookieHandler__WEBPACK_IMPORTED_MODULE_1__.cookieState)().admin) location = './';
+
+  window.onbeforeunload = function () {
+    (0,_cookieHandler__WEBPACK_IMPORTED_MODULE_1__.deleteCookie)('admin');
+    return "Вы уходите? Даннвая сессия будет закрыта...";
+  };
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var typeItem = document.getElementById('typeItem'),
+        tbody = document.getElementById('tbody'),
+        modal = document.getElementById('modal'),
+        form = document.querySelector('form'),
+        renderTypeItem = function renderTypeItem(types) {
+      typeItem.textContent = '';
+      var inner = '<option value="Все услуги">Все услуги</option>';
+      types.forEach(function (item) {
+        inner += "\n          <option value=\"".concat(item, "\">\n            ").concat(item, "\n          </option>");
+      });
+      typeItem.innerHTML = inner;
+    },
+        renderDataTable = function renderDataTable(data) {
+      tbody.textContent = '';
+      var inner = '';
+      data.forEach(function (item) {
+        inner += " <tr class=\"table__row\">\n                <td class=\"table__id table__cell\">".concat(item.id, "</td>\n                <td class=\"table-type table__cell\">\n                  ").concat(item.type, "\n                </td>\n                <td class=\"table-name table__cell\">\n                  ").concat(item.name, "\n                </td>\n                <td class=\"table-units table__cell\">").concat(item.units, "</td>\n                <td class=\"table-cost table__cell\">").concat(item.cost, " \u0440\u0443\u0431</td>\n                <td>\n                  <div class=\"table__actions table__cell\">\n                    <button class=\"button action-change\">\n                      <span class=\"svg_ui\"><svg class=\"action-icon_change\">\n                          <use xlink:href=\"img/sprite.svg#change\"></use></svg></span><span>\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C</span>\n                    </button>\n                    <button class=\"button action-remove\">\n                      <span class=\"svg_ui\"><svg class=\"action-icon_remove\">\n                          <use xlink:href=\"img/sprite.svg#remove\"></use></svg></span><span>\u0423\u0434\u0430\u043B\u0438\u0442\u044C</span>\n                    </button>\n                  </div>\n                </td>\n              </tr>\n            ");
+      });
+      tbody.innerHTML = inner;
+    };
+
+    _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.t0 = renderTypeItem;
+              _context.next = 3;
+              return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('GET', '/api/items', {});
+
+            case 3:
+              _context.t1 = _context.sent;
+              (0, _context.t0)(_context.t1);
+              _context.t2 = renderDataTable;
+              _context.next = 8;
+              return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('GET', '/api/items', {
+                type: typeItem.value
+              });
+
+            case 8:
+              _context.t3 = _context.sent;
+              (0, _context.t2)(_context.t3);
+
+            case 10:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+
+    typeItem.addEventListener('change', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.t0 = renderDataTable;
+              _context2.next = 3;
+              return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('GET', '/api/items', {
+                type: typeItem.value
+              });
+
+            case 3:
+              _context2.t1 = _context2.sent;
+              return _context2.abrupt("return", (0, _context2.t0)(_context2.t1));
+
+            case 5:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    })));
+    document.addEventListener('click', function (event) {
+      var target = event.target;
+      if (target.closest('.btn-addItem')) modal.style.display = 'flex';
+
+      if (target.closest('.button__close') || target.closest('.button-ui_firm') || target.closest('.cancel-button')) {
+        if (!target.closest('.button-ui_firm')) event.preventDefault();
+        modal.style.display = '';
+      }
+    });
+    form.addEventListener('submit', function (event) {
+      var formData = new FormData(form),
+          body = {};
+      event.preventDefault();
+      formData.forEach(function (value, key) {
+        return body[key] = value;
+      });
+
+      _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+        var value;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('POST', '/api/items', body);
+
+              case 2:
+                value = typeItem.value;
+                _context3.t0 = renderTypeItem;
+                _context3.next = 6;
+                return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('GET', '/api/items', {});
+
+              case 6:
+                _context3.t1 = _context3.sent;
+                (0, _context3.t0)(_context3.t1);
+                typeItem.value = value;
+                _context3.t2 = renderDataTable;
+                _context3.next = 12;
+                return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('GET', '/api/items', {
+                  type: typeItem.value
+                });
+
+              case 12:
+                _context3.t3 = _context3.sent;
+                (0, _context3.t2)(_context3.t3);
+
+              case 14:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    });
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (adminPanelHandler);
+
+/***/ }),
+
+/***/ "./modules/cookieHandler.js":
+/*!**********************************!*\
+  !*** ./modules/cookieHandler.js ***!
+  \**********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "setCookie": function() { return /* binding */ setCookie; },
+/* harmony export */   "cookieState": function() { return /* binding */ cookieState; },
+/* harmony export */   "deleteCookie": function() { return /* binding */ deleteCookie; }
+/* harmony export */ });
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var setCookie = function setCookie(name, value, year, month, day, path, domain, secure) {
+  document.cookie = "".concat(name, "=").concat(value, "; ").concat(year ? 'expires=' + new Date(year, month, day).toGMTString() : '', "; ").concat(path ? '; path' + path : '').concat(domain ? '; domain' + domain : '').concat(secure ? '; secure' + secure : '');
+},
+    cookieState = function cookieState() {
+  return Object.assign.apply(Object, _toConsumableArray(document.cookie.split('; ').map(function (item) {
+    var obj = {};
+    obj[item.split('=')[0]] = item.split('=')[1];
+    return obj;
+  })));
+},
+    deleteCookie = function deleteCookie(name) {
+  setCookie(name, "", {
+    'max-age': -1
+  });
+};
+
+
+
+/***/ }),
+
+/***/ "./modules/dataRequest.js":
+/*!********************************!*\
+  !*** ./modules/dataRequest.js ***!
+  \********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
+/* harmony export */ });
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var dataRequest = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(method, request, _ref) {
+    var type, name, units, cost, response, data;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            type = _ref.type, name = _ref.name, units = _ref.units, cost = _ref.cost;
+
+            if (!(method === 'POST')) {
+              _context.next = 4;
+              break;
+            }
+
+            _context.next = 4;
+            return fetch("http://localhost:3000".concat(request), {
+              method: method,
+              mode: 'cors',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                type: type,
+                name: name,
+                units: units,
+                cost: cost
+              })
+            });
+
+          case 4:
+            if (!(method === 'GET')) {
+              _context.next = 20;
+              break;
+            }
+
+            _context.next = 7;
+            return fetch("http://localhost:3000".concat(request), {
+              method: method,
+              mode: 'cors'
+            });
+
+          case 7:
+            response = _context.sent;
+            _context.next = 10;
+            return response.json();
+
+          case 10:
+            data = _context.sent;
+
+            if (!type) {
+              _context.next = 19;
+              break;
+            }
+
+            if (!(type === 'Все услуги')) {
+              _context.next = 16;
+              break;
+            }
+
+            return _context.abrupt("return", data);
+
+          case 16:
+            return _context.abrupt("return", data.reduce(function (newData, item) {
+              if (item.type === type) newData.push(item);
+              return newData;
+            }, []));
+
+          case 17:
+            _context.next = 20;
+            break;
+
+          case 19:
+            return _context.abrupt("return", data.reduce(function (newData, item) {
+              if (!newData.includes(item.type)) newData.push(item.type);
+              return newData;
+            }, []));
+
+          case 20:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function dataRequest(_x, _x2, _x3) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (dataRequest);
+
+/***/ }),
+
+/***/ "./modules/loginHandler.js":
+/*!*********************************!*\
+  !*** ./modules/loginHandler.js ***!
+  \*********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
+/* harmony export */ });
+/* harmony import */ var _cookieHandler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cookieHandler */ "./modules/cookieHandler.js");
+
+
+var loginHeandler = function loginHeandler() {
+  var warning = document.querySelectorAll('.text-warning'),
+      name = document.getElementById('name'),
+      button = document.querySelector('.button'),
+      password = document.getElementById('password');
+  warning.forEach(function (item) {
+    return item.style.display = 'none';
+  });
+  button.addEventListener('click', function (event) {
+    event.preventDefault();
+    console.log(name.value, password.value);
+
+    if (name.value === 'admin' && password.value === '123') {
+      (0,_cookieHandler__WEBPACK_IMPORTED_MODULE_0__.setCookie)(name.value, true);
+      location = './table.html';
+    } else {
+      (0,_cookieHandler__WEBPACK_IMPORTED_MODULE_0__.deleteCookie)('admin');
+      warning.forEach(function (item) {
+        return item.style.display = 'block';
+      });
+    }
+
+    name.value = '';
+    password.value = '';
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (loginHeandler);
+
+/***/ }),
+
 /***/ "./styles/index.css":
 /*!**************************!*\
   !*** ./styles/index.css ***!
@@ -857,127 +1225,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! regenerator-runtime/runtime */ "../../node_modules/regenerator-runtime/runtime.js");
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _styles_index_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles/index.css */ "./styles/index.css");
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+/* harmony import */ var _modules_loginHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/loginHandler */ "./modules/loginHandler.js");
+/* harmony import */ var _modules_adminPanelHandler__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/adminPanelHandler */ "./modules/adminPanelHandler.js");
 
 
 
 
-var warning = document.querySelectorAll('.text-warning'),
-    name = document.getElementById('name'),
-    button = document.querySelector('.button'),
-    password = document.getElementById('password'),
-    setCookie = function setCookie(name, value, year, month, day, path, domain, secure) {
-  document.cookie = "".concat(name, "=").concat(value, "; ").concat(year ? 'expires=' + new Date(year, month, day).toGMTString() : '', "; ").concat(path ? '; path' + path : '').concat(domain ? '; domain' + domain : '').concat(secure ? '; secure' + secure : '');
-},
-    cookieState = function cookieState() {
-  return Object.assign.apply(Object, _toConsumableArray(document.cookie.split('; ').map(function (item) {
-    var obj = {};
-    obj[item.split('=')[0]] = item.split('=')[1];
-    return obj;
-  })));
-},
-    deleteCookie = function deleteCookie(name) {
-  setCookie(name, "", {
-    'max-age': -1
-  });
-},
-    getData = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    var response;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return fetch('http://localhost:3000/api/items', {
-              method: 'GET',
-              mode: 'cors'
-            });
 
-          case 2:
-            response = _context.sent;
-            _context.next = 5;
-            return response.json();
-
-          case 5:
-            return _context.abrupt("return", _context.sent);
-
-          case 6:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-
-  return function getData() {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-console.log(location.pathname);
-
-if (location.pathname.indexOf('/admin/table.html') === -1) {
-  warning.forEach(function (item) {
-    return item.style.display = 'none';
-  });
-  button.addEventListener('click', function (event) {
-    event.preventDefault();
-    console.log(name.value, password.value);
-
-    if (name.value === 'admin' && password.value === '123') {
-      setCookie(name.value, true);
-      location = './table.html';
-    } else {
-      deleteCookie('admin');
-      warning.forEach(function (item) {
-        return item.style.display = 'block';
-      });
-    }
-
-    name.value = '';
-    password.value = '';
-  });
-}
-
-if (location.pathname.indexOf('/admin/table.html') !== -1) {
-  _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            _context2.t0 = console;
-            _context2.next = 3;
-            return getData();
-
-          case 3:
-            _context2.t1 = _context2.sent;
-
-            _context2.t0.log.call(_context2.t0, _context2.t1);
-
-          case 5:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }))();
-
-  console.log(cookieState());
+if (!location.pathname.includes('/admin/table.html')) {
+  (0,_modules_loginHandler__WEBPACK_IMPORTED_MODULE_2__["default"])();
+} else {
+  (0,_modules_adminPanelHandler__WEBPACK_IMPORTED_MODULE_3__["default"])();
 }
 }();
 /******/ })()

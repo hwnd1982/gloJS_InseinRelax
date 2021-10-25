@@ -6,23 +6,6 @@
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
     <title>Управление базой данных</title>
-    <script> 
-      function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-      function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-      function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-      function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-      function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-      function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-      cookieState = function cookieState() {
-          return Object.assign.apply(Object, _toConsumableArray(document.cookie.split('; ').map(function (item) {
-          var obj = {};
-          obj[item.split('=')[0]] = item.split('=')[1];
-          return obj;
-        })));
-      };
-
-      if (location.pathname.indexOf('/admin/table.html') !== -1  && !cookieState().admin) location = './';
-    </script>
   </head>
   <body>
     <main class="main">
@@ -283,6 +266,7 @@
           <label class="label">
             <input
               id="type"
+              name="type"
               class="input input__type"
               placeholder="Тип услуги*"
             />
@@ -291,6 +275,7 @@
           <label class="label">
             <input
               id="name"
+              name="name"
               class="input input__name"
               placeholder="Виды работ*"
             />
@@ -299,13 +284,14 @@
           <label class="label">
             <input
               id="units"
+              name="units"
               class="input input__units"
               placeholder="Единицы измерения*"
             />
           </label>
 
           <label class="label">
-            <input id="cost" class="input input__cost" placeholder="Цена*" />
+            <input id="cost" name="cost" class="input input__cost" placeholder="Цена*" />
           </label>
 
           <button class="button button-ui_firm"><span>Сохранить</span></button>

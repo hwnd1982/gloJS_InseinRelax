@@ -31,6 +31,8 @@ module.exports = {
     new HTMLWebpackPlugin({
       filename: "table.html",
       template: "./table.html",
+      inject: "head",
+      scriptLoading: "blocking",
       minify: {
         collapseWhitespace: !isDev,
       },
