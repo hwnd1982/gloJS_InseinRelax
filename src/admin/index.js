@@ -33,7 +33,9 @@ const
     return await response.json();
   };
 
-if (location.pathname === '/admin/') {
+console.log(location.pathname);
+
+if (location.pathname.indexOf('/admin/table.html') === -1) {
 
   warning.forEach(item => item.style.display = 'none');
   button.addEventListener('click', event => {
@@ -52,7 +54,7 @@ if (location.pathname === '/admin/') {
 
 }
 
-if (location.pathname === '/admin/table.html') {
+if (location.pathname.indexOf('/admin/table.html') !== -1) {
 
   (async () => {
     console.log(await getData());

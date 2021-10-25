@@ -6,15 +6,22 @@
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
     <title>Управление базой данных</title>
-    <script>
-      const cookieState = () => Object.assign(...document.cookie.split('; ').map(item => {
-        const obj = {};
+    <script> 
+      function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+      function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+      function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+      function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+      function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+      function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+      cookieState = function cookieState() {
+          return Object.assign.apply(Object, _toConsumableArray(document.cookie.split('; ').map(function (item) {
+          var obj = {};
+          obj[item.split('=')[0]] = item.split('=')[1];
+          return obj;
+        })));
+      };
 
-        obj[item.split('=')[0]] = item.split('=')[1];
-        return obj;
-      }));
-
-      if (location.pathname === '/admin/table.html' && !cookieState().admin) location = './';
+      if (location.pathname.indexOf('/admin/table.html') !== -1  && !cookieState().admin) location = './';
     </script>
   </head>
   <body>

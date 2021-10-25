@@ -929,7 +929,9 @@ var warning = document.querySelectorAll('.text-warning'),
   };
 }();
 
-if (location.pathname === '/admin/') {
+console.log(location.pathname);
+
+if (location.pathname.indexOf('/admin/table.html') === -1) {
   warning.forEach(function (item) {
     return item.style.display = 'none';
   });
@@ -952,7 +954,7 @@ if (location.pathname === '/admin/') {
   });
 }
 
-if (location.pathname === '/admin/table.html') {
+if (location.pathname.indexOf('/admin/table.html') !== -1) {
   _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
