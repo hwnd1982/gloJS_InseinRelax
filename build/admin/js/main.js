@@ -58,6 +58,11 @@ var adminPanelHandler = function adminPanelHandler() {
         inner += " <tr class=\"table__row\" id=\"".concat(item.id, "\">\n                <td class=\"table__id table__cell\">").concat(item.id, "</td>\n                <td class=\"table-type table__cell\">\n                  ").concat(item.type, "\n                </td>\n                <td class=\"table-name table__cell\">\n                  ").concat(item.name, "\n                </td>\n                <td class=\"table-units table__cell\">").concat(item.units, "</td>\n                <td class=\"table-cost table__cell\">").concat(item.cost, " \u0440\u0443\u0431</td>\n                <td>\n                  <div class=\"table__actions table__cell\">\n                    <button class=\"button action-change\">\n                      <span class=\"svg_ui\"><svg class=\"action-icon_change\">\n                          <use xlink:href=\"img/sprite.svg#change\"></use></svg></span><span>\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C</span>\n                    </button>\n                    <button class=\"button action-remove\">\n                      <span class=\"svg_ui\"><svg class=\"action-icon_remove\">\n                          <use xlink:href=\"img/sprite.svg#remove\"></use></svg></span><span>\u0423\u0434\u0430\u043B\u0438\u0442\u044C</span>\n                    </button>\n                  </div>\n                </td>\n              </tr>\n            ");
       });
       tbody.innerHTML = inner;
+    },
+        cleanFormInput = function cleanFormInput() {
+      return form.querySelectorAll('input').forEach(function (item) {
+        return item.value = '';
+      });
     };
 
     var editID = 0;
@@ -121,6 +126,7 @@ var adminPanelHandler = function adminPanelHandler() {
       if (target.closest('.btn-addItem')) {
         modal.style.display = 'flex';
         header.textContent = 'Добавение новой услуги';
+        cleanFormInput();
       }
 
       if (target.closest('.action-change')) {
@@ -194,6 +200,7 @@ var adminPanelHandler = function adminPanelHandler() {
 
       if (target.closest('.button__close') || target.closest('.button-ui_firm') || target.closest('.cancel-button')) {
         if (!target.closest('.button-ui_firm')) event.preventDefault();
+        if (target.closest('.cancel-button')) cleanFormInput();
         modal.style.display = '';
       }
     });
@@ -248,8 +255,9 @@ var adminPanelHandler = function adminPanelHandler() {
                 _context5.t3 = _context5.sent;
                 (0, _context5.t2)(_context5.t3);
                 editID = 0;
+                cleanFormInput();
 
-              case 20:
+              case 21:
               case "end":
                 return _context5.stop();
             }

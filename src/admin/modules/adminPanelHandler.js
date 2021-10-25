@@ -66,7 +66,8 @@ const adminPanelHandler = () => {
             `;
         });
         tbody.innerHTML = inner;
-      };
+      },
+      cleanFormInput = () => form.querySelectorAll('input').forEach(item => item.value = '');
 
     let editID = 0;
     formInputHandler();
@@ -82,6 +83,7 @@ const adminPanelHandler = () => {
       if (target.closest('.btn-addItem')) {
         modal.style.display = 'flex';
         header.textContent = 'Добавение новой услуги';
+        cleanFormInput();
       }
       if (target.closest('.action-change')) {
         editID = target.closest('.table__row').id;
@@ -109,6 +111,7 @@ const adminPanelHandler = () => {
       }
       if (target.closest('.button__close') || target.closest('.button-ui_firm') || target.closest('.cancel-button')) {
         if (!target.closest('.button-ui_firm')) event.preventDefault();
+        if (target.closest('.cancel-button')) cleanFormInput();
         modal.style.display = '';
       }
     });
@@ -128,6 +131,7 @@ const adminPanelHandler = () => {
         typeItem.value = value;
         renderDataTable(await dataRequest('GET', '/api/items', { type: typeItem.value }));
         editID = 0;
+        cleanFormInput();
       })();
     });
   });
