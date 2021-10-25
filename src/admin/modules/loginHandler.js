@@ -10,7 +10,6 @@ const loginHeandler = () => {
   warning.forEach(item => item.style.display = 'none');
   button.addEventListener('click', event => {
     event.preventDefault();
-    console.log(name.value, password.value);
     if (name.value === 'admin' && password.value === '123') {
       setCookie(name.value, true);
       location = './table.html';

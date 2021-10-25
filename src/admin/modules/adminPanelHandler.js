@@ -1,7 +1,6 @@
 import dataRequest from './dataRequest';
 import { cookieState, deleteCookie } from './cookieHandler';
-
-
+import formInputHandler from './formInputHandler';
 
 // GET /api/items - получить список услуг, в query параметр search можно передать поисковый запрос
 // POST /api/items - создать новую услугу, в теле запроса нужно передать объект
@@ -24,6 +23,7 @@ const adminPanelHandler = () => {
       tbody = document.getElementById('tbody'),
       modal = document.getElementById('modal'),
       form = document.querySelector('form'),
+      header = document.querySelector('.modal__header'),
       renderTypeItem = types => {
         typeItem.textContent = '';
         let inner = '<option value="Все услуги">Все услуги</option>';
@@ -40,7 +40,7 @@ const adminPanelHandler = () => {
         let inner = '';
         data.forEach(item => {
           inner +=
-            ` <tr class="table__row">
+            ` <tr class="table__row" id="${item.id}">
                 <td class="table__id table__cell">${item.id}</td>
                 <td class="table-type table__cell">
                   ${item.type}
@@ -68,6 +68,8 @@ const adminPanelHandler = () => {
         tbody.innerHTML = inner;
       };
 
+    let editID = 0;
+    formInputHandler();
     (async () => {
       renderTypeItem(await dataRequest('GET', '/api/items', {}));
       renderDataTable(await dataRequest('GET', '/api/items', { type: typeItem.value }));
@@ -77,7 +79,34 @@ const adminPanelHandler = () => {
     document.addEventListener('click', event => {
       const target = event.target;
 
-      if (target.closest('.btn-addItem')) modal.style.display = 'flex';
+      if (target.closest('.btn-addItem')) {
+        modal.style.display = 'flex';
+        header.textContent = 'Добавение новой услуги';
+      }
+      if (target.closest('.action-change')) {
+        editID = target.closest('.table__row').id;
+        modal.style.display = 'flex';
+        header.textContent = 'Изменение услуги';
+        (async () => {
+          const data = await dataRequest('GET', `/api/items/${editID}`, {});
+          for (const key in data) {
+            const input = form.querySelector(`input[name="${key}"]`);
+
+            if (input) input.value = key === 'cost' ? data[key].replace(/[^\d]+/g, '') : data[key];
+          }
+        })();
+      }
+      if (target.closest('.action-remove')) {
+        (async () => {
+          const value = typeItem.value;
+
+          await dataRequest('DELETE', `/api/items/${target.closest('.table__row').id}`, {});
+          const types = await dataRequest('GET', '/api/items', {});
+          renderTypeItem(types);
+          typeItem.value =  types.includes(value) ? value : 'Все услуги';
+          renderDataTable(await dataRequest('GET', '/api/items', { type: typeItem.value }));
+        })();
+      }
       if (target.closest('.button__close') || target.closest('.button-ui_firm') || target.closest('.cancel-button')) {
         if (!target.closest('.button-ui_firm')) event.preventDefault();
         modal.style.display = '';
@@ -91,11 +120,14 @@ const adminPanelHandler = () => {
       event.preventDefault();
       formData.forEach((value, key) => body[key] = value);
       (async () => {
-        await dataRequest('POST', '/api/items',  body);
         const value = typeItem.value;
+
+        if (editID) await dataRequest('PATCH', `/api/items/${editID}`,  body);
+        else await dataRequest('POST', '/api/items',  body);
         renderTypeItem(await dataRequest('GET', '/api/items', {}));
         typeItem.value = value;
         renderDataTable(await dataRequest('GET', '/api/items', { type: typeItem.value }));
+        editID = 0;
       })();
     });
   });

@@ -14,9 +14,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _dataRequest__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dataRequest */ "./modules/dataRequest.js");
 /* harmony import */ var _cookieHandler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./cookieHandler */ "./modules/cookieHandler.js");
+/* harmony import */ var _formInputHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./formInputHandler */ "./modules/formInputHandler.js");
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 
  // GET /api/items - получить список услуг, в query параметр search можно передать поисковый запрос
@@ -40,6 +42,7 @@ var adminPanelHandler = function adminPanelHandler() {
         tbody = document.getElementById('tbody'),
         modal = document.getElementById('modal'),
         form = document.querySelector('form'),
+        header = document.querySelector('.modal__header'),
         renderTypeItem = function renderTypeItem(types) {
       typeItem.textContent = '';
       var inner = '<option value="Все услуги">Все услуги</option>';
@@ -52,10 +55,13 @@ var adminPanelHandler = function adminPanelHandler() {
       tbody.textContent = '';
       var inner = '';
       data.forEach(function (item) {
-        inner += " <tr class=\"table__row\">\n                <td class=\"table__id table__cell\">".concat(item.id, "</td>\n                <td class=\"table-type table__cell\">\n                  ").concat(item.type, "\n                </td>\n                <td class=\"table-name table__cell\">\n                  ").concat(item.name, "\n                </td>\n                <td class=\"table-units table__cell\">").concat(item.units, "</td>\n                <td class=\"table-cost table__cell\">").concat(item.cost, " \u0440\u0443\u0431</td>\n                <td>\n                  <div class=\"table__actions table__cell\">\n                    <button class=\"button action-change\">\n                      <span class=\"svg_ui\"><svg class=\"action-icon_change\">\n                          <use xlink:href=\"img/sprite.svg#change\"></use></svg></span><span>\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C</span>\n                    </button>\n                    <button class=\"button action-remove\">\n                      <span class=\"svg_ui\"><svg class=\"action-icon_remove\">\n                          <use xlink:href=\"img/sprite.svg#remove\"></use></svg></span><span>\u0423\u0434\u0430\u043B\u0438\u0442\u044C</span>\n                    </button>\n                  </div>\n                </td>\n              </tr>\n            ");
+        inner += " <tr class=\"table__row\" id=\"".concat(item.id, "\">\n                <td class=\"table__id table__cell\">").concat(item.id, "</td>\n                <td class=\"table-type table__cell\">\n                  ").concat(item.type, "\n                </td>\n                <td class=\"table-name table__cell\">\n                  ").concat(item.name, "\n                </td>\n                <td class=\"table-units table__cell\">").concat(item.units, "</td>\n                <td class=\"table-cost table__cell\">").concat(item.cost, " \u0440\u0443\u0431</td>\n                <td>\n                  <div class=\"table__actions table__cell\">\n                    <button class=\"button action-change\">\n                      <span class=\"svg_ui\"><svg class=\"action-icon_change\">\n                          <use xlink:href=\"img/sprite.svg#change\"></use></svg></span><span>\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C</span>\n                    </button>\n                    <button class=\"button action-remove\">\n                      <span class=\"svg_ui\"><svg class=\"action-icon_remove\">\n                          <use xlink:href=\"img/sprite.svg#remove\"></use></svg></span><span>\u0423\u0434\u0430\u043B\u0438\u0442\u044C</span>\n                    </button>\n                  </div>\n                </td>\n              </tr>\n            ");
       });
       tbody.innerHTML = inner;
     };
+
+    var editID = 0;
+    (0,_formInputHandler__WEBPACK_IMPORTED_MODULE_2__["default"])();
 
     _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -111,7 +117,80 @@ var adminPanelHandler = function adminPanelHandler() {
     })));
     document.addEventListener('click', function (event) {
       var target = event.target;
-      if (target.closest('.btn-addItem')) modal.style.display = 'flex';
+
+      if (target.closest('.btn-addItem')) {
+        modal.style.display = 'flex';
+        header.textContent = 'Добавение новой услуги';
+      }
+
+      if (target.closest('.action-change')) {
+        editID = target.closest('.table__row').id;
+        modal.style.display = 'flex';
+        header.textContent = 'Изменение услуги';
+
+        _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+          var data, key, input;
+          return regeneratorRuntime.wrap(function _callee3$(_context3) {
+            while (1) {
+              switch (_context3.prev = _context3.next) {
+                case 0:
+                  _context3.next = 2;
+                  return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('GET', "/api/items/".concat(editID), {});
+
+                case 2:
+                  data = _context3.sent;
+
+                  for (key in data) {
+                    input = form.querySelector("input[name=\"".concat(key, "\"]"));
+                    if (input) input.value = key === 'cost' ? data[key].replace(/[^\d]+/g, '') : data[key];
+                  }
+
+                case 4:
+                case "end":
+                  return _context3.stop();
+              }
+            }
+          }, _callee3);
+        }))();
+      }
+
+      if (target.closest('.action-remove')) {
+        _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+          var value, types;
+          return regeneratorRuntime.wrap(function _callee4$(_context4) {
+            while (1) {
+              switch (_context4.prev = _context4.next) {
+                case 0:
+                  value = typeItem.value;
+                  _context4.next = 3;
+                  return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('DELETE', "/api/items/".concat(target.closest('.table__row').id), {});
+
+                case 3:
+                  _context4.next = 5;
+                  return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('GET', '/api/items', {});
+
+                case 5:
+                  types = _context4.sent;
+                  renderTypeItem(types);
+                  typeItem.value = types.includes(value) ? value : 'Все услуги';
+                  _context4.t0 = renderDataTable;
+                  _context4.next = 11;
+                  return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('GET', '/api/items', {
+                    type: typeItem.value
+                  });
+
+                case 11:
+                  _context4.t1 = _context4.sent;
+                  (0, _context4.t0)(_context4.t1);
+
+                case 13:
+                case "end":
+                  return _context4.stop();
+              }
+            }
+          }, _callee4);
+        }))();
+      }
 
       if (target.closest('.button__close') || target.closest('.button-ui_firm') || target.closest('.cancel-button')) {
         if (!target.closest('.button-ui_firm')) event.preventDefault();
@@ -126,41 +205,56 @@ var adminPanelHandler = function adminPanelHandler() {
         return body[key] = value;
       });
 
-      _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+      _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
         var value;
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                _context3.next = 2;
-                return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('POST', '/api/items', body);
-
-              case 2:
                 value = typeItem.value;
-                _context3.t0 = renderTypeItem;
-                _context3.next = 6;
-                return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('GET', '/api/items', {});
+
+                if (!editID) {
+                  _context5.next = 6;
+                  break;
+                }
+
+                _context5.next = 4;
+                return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('PATCH', "/api/items/".concat(editID), body);
+
+              case 4:
+                _context5.next = 8;
+                break;
 
               case 6:
-                _context3.t1 = _context3.sent;
-                (0, _context3.t0)(_context3.t1);
+                _context5.next = 8;
+                return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('POST', '/api/items', body);
+
+              case 8:
+                _context5.t0 = renderTypeItem;
+                _context5.next = 11;
+                return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('GET', '/api/items', {});
+
+              case 11:
+                _context5.t1 = _context5.sent;
+                (0, _context5.t0)(_context5.t1);
                 typeItem.value = value;
-                _context3.t2 = renderDataTable;
-                _context3.next = 12;
+                _context5.t2 = renderDataTable;
+                _context5.next = 17;
                 return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('GET', '/api/items', {
                   type: typeItem.value
                 });
 
-              case 12:
-                _context3.t3 = _context3.sent;
-                (0, _context3.t2)(_context3.t3);
+              case 17:
+                _context5.t3 = _context5.sent;
+                (0, _context5.t2)(_context5.t3);
+                editID = 0;
 
-              case 14:
+              case 20:
               case "end":
-                return _context3.stop();
+                return _context5.stop();
             }
           }
-        }, _callee3);
+        }, _callee5);
       }))();
     });
   });
@@ -239,7 +333,7 @@ var dataRequest = /*#__PURE__*/function () {
           case 0:
             type = _ref.type, name = _ref.name, units = _ref.units, cost = _ref.cost;
 
-            if (!(method === 'POST')) {
+            if (!(method === 'POST' || method === 'PATCH' || method === 'DELETE')) {
               _context.next = 4;
               break;
             }
@@ -261,7 +355,7 @@ var dataRequest = /*#__PURE__*/function () {
 
           case 4:
             if (!(method === 'GET')) {
-              _context.next = 20;
+              _context.next = 24;
               break;
             }
 
@@ -279,35 +373,47 @@ var dataRequest = /*#__PURE__*/function () {
           case 10:
             data = _context.sent;
 
+            if (!(request === '/api/items')) {
+              _context.next = 23;
+              break;
+            }
+
             if (!type) {
-              _context.next = 19;
+              _context.next = 20;
               break;
             }
 
             if (!(type === 'Все услуги')) {
-              _context.next = 16;
+              _context.next = 17;
               break;
             }
 
             return _context.abrupt("return", data);
 
-          case 16:
+          case 17:
             return _context.abrupt("return", data.reduce(function (newData, item) {
               if (item.type === type) newData.push(item);
               return newData;
             }, []));
 
-          case 17:
-            _context.next = 20;
+          case 18:
+            _context.next = 21;
             break;
 
-          case 19:
+          case 20:
             return _context.abrupt("return", data.reduce(function (newData, item) {
               if (!newData.includes(item.type)) newData.push(item.type);
               return newData;
             }, []));
 
-          case 20:
+          case 21:
+            _context.next = 24;
+            break;
+
+          case 23:
+            return _context.abrupt("return", data);
+
+          case 24:
           case "end":
             return _context.stop();
         }
@@ -321,6 +427,45 @@ var dataRequest = /*#__PURE__*/function () {
 }();
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (dataRequest);
+
+/***/ }),
+
+/***/ "./modules/formInputHandler.js":
+/*!*************************************!*\
+  !*** ./modules/formInputHandler.js ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
+/* harmony export */ });
+var formInputHandler = function formInputHandler() {
+  document.addEventListener('input', function (_ref) {
+    var target = _ref.target;
+
+    if (!target.matches('input[name="name"], input[name="units"], input[name="cost"], input[name="type"]')) {
+      return;
+    } else {
+      target.matches('input[name="type"]') ? target.value = target.value.replace(/[^а-яё\s:]+/gi, '') : null;
+      target.matches('input[name="name"]') ? target.value = target.value.replace(/[^а-яё\w\s\d().,/'"]+/gi, '') : null;
+      target.matches('input[name="units"]') ? target.value = target.value.replace(/[^а-яё\d.]+/g, '') : null;
+      target.matches('input[name="cost"]') ? target.value = target.value.replace(/[^\d]+/g, '') : null;
+    }
+  });
+  document.addEventListener('change', function (_ref2) {
+    var target = _ref2.target;
+
+    if (!target.matches('input[name="name"], input[name="units"], input[name="cost"], input[name="type"]')) {
+      return;
+    }
+
+    target.value = target.value.replace(/([().,x/:.'"])(?=[().,/:.'"]*\1)/g, '').replace(/([\s])(?=[\s]*\1)/g, '').replace(/^([\s-]*)|([\s-]*)$/g, '');
+  }, true);
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (formInputHandler);
 
 /***/ }),
 
@@ -348,7 +493,6 @@ var loginHeandler = function loginHeandler() {
   });
   button.addEventListener('click', function (event) {
     event.preventDefault();
-    console.log(name.value, password.value);
 
     if (name.value === 'admin' && password.value === '123') {
       (0,_cookieHandler__WEBPACK_IMPORTED_MODULE_0__.setCookie)(name.value, true);
