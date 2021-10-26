@@ -15,9 +15,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _dataRequest__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dataRequest */ "./modules/dataRequest.js");
 /* harmony import */ var _cookieHandler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./cookieHandler */ "./modules/cookieHandler.js");
 /* harmony import */ var _formInputHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./formInputHandler */ "./modules/formInputHandler.js");
+/* harmony import */ var _loadMessage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./loadMessage */ "./modules/loadMessage.js");
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 
 
@@ -69,28 +71,35 @@ var adminPanelHandler = function adminPanelHandler() {
     (0,_formInputHandler__WEBPACK_IMPORTED_MODULE_2__["default"])();
 
     _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      var types;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _context.t0 = renderTypeItem;
+              tbody.innerHTML = _loadMessage__WEBPACK_IMPORTED_MODULE_3__["default"];
               _context.next = 3;
               return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('GET', '/api/items', {});
 
             case 3:
-              _context.t1 = _context.sent;
-              (0, _context.t0)(_context.t1);
-              _context.t2 = renderDataTable;
-              _context.next = 8;
+              types = _context.sent;
+
+              if (!types) {
+                _context.next = 11;
+                break;
+              }
+
+              renderTypeItem(types);
+              _context.t0 = renderDataTable;
+              _context.next = 9;
               return (0,_dataRequest__WEBPACK_IMPORTED_MODULE_0__["default"])('GET', '/api/items', {
                 type: typeItem.value
               });
 
-            case 8:
-              _context.t3 = _context.sent;
-              (0, _context.t2)(_context.t3);
+            case 9:
+              _context.t1 = _context.sent;
+              (0, _context.t0)(_context.t1);
 
-            case 10:
+            case 11:
             case "end":
               return _context.stop();
           }
@@ -328,9 +337,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
 /* harmony export */ });
+/* harmony import */ var _cookieHandler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cookieHandler */ "./modules/cookieHandler.js");
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
 
 var dataRequest = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(method, request, _ref) {
@@ -372,6 +384,8 @@ var dataRequest = /*#__PURE__*/function () {
             return fetch("http://localhost:3000".concat(request), {
               method: method,
               mode: 'cors'
+            })["catch"](function () {
+              throw console.log('Загрузить данные не удалось...');
             });
 
           case 8:
@@ -430,8 +444,8 @@ var dataRequest = /*#__PURE__*/function () {
             _context.prev = 27;
             _context.t0 = _context["catch"](1);
             alert("\u0421\u0435\u0440\u0432\u0435\u0440 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D... \u0412\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0441\u0435\u0440\u0432\u0435\u0440:\n      \u0414\u043B\u044F \u0437\u0430\u043F\u0443\u0441\u043A\u0430 \u0430\u0434\u043C\u0438\u043D-\u043F\u0430\u043D\u0435\u043B\u0438 \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u043E \u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C \u0444\u0430\u0439\u043B index.js\n      \u0438\u0437 \u043F\u0430\u043F\u043A\u0438 crm-backend \u0441 \u043F\u043E\u043C\u043E\u0449\u044C\u044E \u043A\u043E\u043C\u0430\u043D\u0434\u044B node index");
-            location = './';
-            console.log(_context.t0);
+            (0,_cookieHandler__WEBPACK_IMPORTED_MODULE_0__.deleteCookie)('admin');
+            throw location = './';
 
           case 32:
           case "end":
@@ -486,6 +500,22 @@ var formInputHandler = function formInputHandler() {
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (formInputHandler);
+
+/***/ }),
+
+/***/ "./modules/loadMessage.js":
+/*!********************************!*\
+  !*** ./modules/loadMessage.js ***!
+  \********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
+/* harmony export */ });
+var loadMessage = "<style>\n        .sk-circle-bounce-wrap {\n          position: absolute;\n          width: 98vw;\n          height: 80vh;\n          display: flex;\n          background-color: #F5F5F5\n        }\n        .sk-circle-bounce {\n          background-color: transparent;\n          width: 100px;\n          height: 100px;\n          position: relative;\n          margin: auto;\n        }\n        .sk-child {\n          width: 100%;\n          height: 100%;\n          position: absolute;\n          left: 0;\n          top: 0;\n        }\n        .sk-circle-bounce .sk-circle-2 {\n          transform: rotate(30deg);\n        }\n        .sk-circle-bounce .sk-circle-3 {\n          transform: rotate(60deg);\n        }\n        .sk-circle-bounce .sk-circle-4 {\n          transform: rotate(90deg);\n        }\n        .sk-circle-bounce .sk-circle-5 {\n          transform: rotate(120deg);\n        }\n        .sk-circle-bounce .sk-circle-6 {\n          transform: rotate(150deg);\n        }\n        .sk-circle-bounce .sk-circle-7 {\n          transform: rotate(180deg);\n        }\n        .sk-circle-bounce .sk-circle-8 {\n          transform: rotate(210deg);\n        }\n        .sk-circle-bounce .sk-circle-9 {\n          transform: rotate(240deg);\n        }\n        .sk-circle-bounce .sk-circle-10 {\n          transform: rotate(270deg);\n        }\n        .sk-circle-bounce .sk-circle-11 {\n          transform: rotate(300deg);\n        }\n        .sk-circle-bounce .sk-circle-12 {\n          transform: rotate(330deg);\n        }\n        .sk-circle-bounce .sk-circle-2:before {\n          animation-delay: -1.1s;\n        }\n        .sk-circle-bounce .sk-circle-3:before {\n          animation-delay: -1s;\n        }\n        .sk-circle-bounce .sk-circle-4:before {\n          animation-delay: -0.9s;\n        }\n        .sk-circle-bounce .sk-circle-5:before {\n          animation-delay: -0.8s;\n        }\n        .sk-circle-bounce .sk-circle-6:before {\n          animation-delay: -0.7s;\n        }\n        .sk-circle-bounce .sk-circle-7:before {\n          animation-delay: -0.6s;\n        }\n        .sk-circle-bounce .sk-circle-8:before {\n          animation-delay: -0.5s;\n        }\n        .sk-circle-bounce .sk-circle-9:before {\n          animation-delay: -0.4s;\n        }\n        .sk-circle-bounce .sk-circle-10:before {\n          animation-delay: -0.3s;\n        }\n        .sk-circle-bounce .sk-circle-11:before {\n          animation-delay: -0.2s;\n        }\n        .sk-circle-bounce .sk-circle-12:before {\n          animation-delay: -0.1s;\n        }\n        .sk-child:before {\n          content: \"\";\n          display: block;\n          margin: 0 auto;\n          width: 15%;\n          height: 15%;\n          background: linear-gradient(90deg, #f17c0c 0%, #fba600 100%), 50%;\n          border-radius: 100%;\n          animation: sk-circle-bounce-delay 1.2s infinite ease-in-out both;\n        }\n        @keyframes sk-circle-bounce-delay {\n          0%,\n          80%,\n          100% {\n            transform: scale(0);\n          }\n          40% {\n            transform: scale(1);\n          }\n        }\n      </style>\n        <div class=\"sk-circle-bounce-wrap\">\n          <div class=\"sk-circle-bounce\">\n            <div class=\"sk-child sk-circle-1\"></div>\n            <div class=\"sk-child sk-circle-2\"></div>\n            <div class=\"sk-child sk-circle-3\"></div>\n            <div class=\"sk-child sk-circle-4\"></div>\n            <div class=\"sk-child sk-circle-5\"></div>\n            <div class=\"sk-child sk-circle-6\"></div>\n            <div class=\"sk-child sk-circle-7\"></div>\n            <div class=\"sk-child sk-circle-8\"></div>\n            <div class=\"sk-child sk-circle-9\"></div>\n            <div class=\"sk-child sk-circle-10\"></div>\n            <div class=\"sk-child sk-circle-11\"></div>\n            <div class=\"sk-child sk-circle-12\"></div>\n          </div>\n        </div>";
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (loadMessage);
 
 /***/ }),
 

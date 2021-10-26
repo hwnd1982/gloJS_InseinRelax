@@ -1,3 +1,5 @@
+import { deleteCookie } from './cookieHandler';
+
 const dataRequest = async (method, request, { type, name, units, cost }) => {
   try {
     if (method === 'POST' || method === 'PATCH' || method === 'DELETE') {
@@ -15,7 +17,7 @@ const dataRequest = async (method, request, { type, name, units, cost }) => {
         response = await fetch(`http://localhost:3000${request}`, {
           method,
           mode: 'cors'
-        }),
+        }).catch(() => { throw console.log('Загрузить данные не удалось...'); }),
         data = await response.json();
       if (request === '/api/items')
         if (type)
@@ -36,8 +38,8 @@ const dataRequest = async (method, request, { type, name, units, cost }) => {
     alert(`Сервер недоступен... Включите сервер:
       Для запуска админ-панели необходимо запустить файл index.js
       из папки crm-backend с помощью команды node index`);
-    location = './';
-    console.log(e);
+    deleteCookie('admin');
+    throw location = './';
   }
 };
 

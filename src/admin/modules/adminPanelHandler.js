@@ -1,6 +1,7 @@
 import dataRequest from './dataRequest';
 import { cookieState, deleteCookie } from './cookieHandler';
 import formInputHandler from './formInputHandler';
+import loadMessage from './loadMessage';
 
 // GET /api/items - получить список услуг, в query параметр search можно передать поисковый запрос
 // POST /api/items - создать новую услугу, в теле запроса нужно передать объект
@@ -72,8 +73,12 @@ const adminPanelHandler = () => {
     let editID = 0;
     formInputHandler();
     (async () => {
-      renderTypeItem(await dataRequest('GET', '/api/items', {}));
-      renderDataTable(await dataRequest('GET', '/api/items', { type: typeItem.value }));
+      tbody.innerHTML = loadMessage;
+      const types = await dataRequest('GET', '/api/items', {});
+      if (types) {
+        renderTypeItem(types);
+        renderDataTable(await dataRequest('GET', '/api/items', { type: typeItem.value }));
+      }
     })();
     typeItem.addEventListener('change', async () =>
       renderDataTable(await dataRequest('GET', '/api/items', { type: typeItem.value })));
