@@ -13,10 +13,7 @@ import loadMessage from './loadMessage';
 
 const adminPanelHandler = () => {
   if (location.pathname.includes('/admin/table.html') && !cookieState().admin) location = './';
-  window.onbeforeunload = function() {
-    deleteCookie('admin');
-    return "Вы уходите? Даннвая сессия будет закрыта...";
-  };
+  window.onunload = () =>  deleteCookie('admin');
 
   document.addEventListener('DOMContentLoaded', () => {
     const

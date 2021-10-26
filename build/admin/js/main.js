@@ -34,9 +34,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 var adminPanelHandler = function adminPanelHandler() {
   if (location.pathname.includes('/admin/table.html') && !(0,_cookieHandler__WEBPACK_IMPORTED_MODULE_1__.cookieState)().admin) location = './';
 
-  window.onbeforeunload = function () {
-    (0,_cookieHandler__WEBPACK_IMPORTED_MODULE_1__.deleteCookie)('admin');
-    return "Вы уходите? Даннвая сессия будет закрыта...";
+  window.onunload = function () {
+    return (0,_cookieHandler__WEBPACK_IMPORTED_MODULE_1__.deleteCookie)('admin');
   };
 
   document.addEventListener('DOMContentLoaded', function () {
