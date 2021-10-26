@@ -340,13 +340,14 @@ var dataRequest = /*#__PURE__*/function () {
         switch (_context.prev = _context.next) {
           case 0:
             type = _ref.type, name = _ref.name, units = _ref.units, cost = _ref.cost;
+            _context.prev = 1;
 
             if (!(method === 'POST' || method === 'PATCH' || method === 'DELETE')) {
-              _context.next = 4;
+              _context.next = 5;
               break;
             }
 
-            _context.next = 4;
+            _context.next = 5;
             return fetch("http://localhost:3000".concat(request), {
               method: method,
               mode: 'cors',
@@ -361,72 +362,83 @@ var dataRequest = /*#__PURE__*/function () {
               })
             });
 
-          case 4:
+          case 5:
             if (!(method === 'GET')) {
-              _context.next = 24;
+              _context.next = 25;
               break;
             }
 
-            _context.next = 7;
+            _context.next = 8;
             return fetch("http://localhost:3000".concat(request), {
               method: method,
               mode: 'cors'
             });
 
-          case 7:
+          case 8:
             response = _context.sent;
-            _context.next = 10;
+            _context.next = 11;
             return response.json();
 
-          case 10:
+          case 11:
             data = _context.sent;
 
             if (!(request === '/api/items')) {
-              _context.next = 23;
+              _context.next = 24;
               break;
             }
 
             if (!type) {
-              _context.next = 20;
+              _context.next = 21;
               break;
             }
 
             if (!(type === 'Все услуги')) {
-              _context.next = 17;
+              _context.next = 18;
               break;
             }
 
             return _context.abrupt("return", data);
 
-          case 17:
+          case 18:
             return _context.abrupt("return", data.reduce(function (newData, item) {
               if (item.type === type) newData.push(item);
               return newData;
             }, []));
 
-          case 18:
-            _context.next = 21;
+          case 19:
+            _context.next = 22;
             break;
 
-          case 20:
+          case 21:
             return _context.abrupt("return", data.reduce(function (newData, item) {
               if (!newData.includes(item.type)) newData.push(item.type);
               return newData;
             }, []));
 
-          case 21:
-            _context.next = 24;
+          case 22:
+            _context.next = 25;
             break;
 
-          case 23:
+          case 24:
             return _context.abrupt("return", data);
 
-          case 24:
+          case 25:
+            _context.next = 32;
+            break;
+
+          case 27:
+            _context.prev = 27;
+            _context.t0 = _context["catch"](1);
+            alert("\u0421\u0435\u0440\u0432\u0435\u0440 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D... \u0412\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0441\u0435\u0440\u0432\u0435\u0440:\n      \u0414\u043B\u044F \u0437\u0430\u043F\u0443\u0441\u043A\u0430 \u0430\u0434\u043C\u0438\u043D-\u043F\u0430\u043D\u0435\u043B\u0438 \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u043E \u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C \u0444\u0430\u0439\u043B index.js\n      \u0438\u0437 \u043F\u0430\u043F\u043A\u0438 crm-backend \u0441 \u043F\u043E\u043C\u043E\u0449\u044C\u044E \u043A\u043E\u043C\u0430\u043D\u0434\u044B node index");
+            location = './';
+            console.log(_context.t0);
+
+          case 32:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee);
+    }, _callee, null, [[1, 27]]);
   }));
 
   return function dataRequest(_x, _x2, _x3) {
