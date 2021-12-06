@@ -1,4 +1,4 @@
-import dataRequest from './dataRequest';
+import { getItems } from './dataRequest';
 
 const dataHandlerPopupRepairTypes = () => {
   let indexCurrentItem = 0, sum = 0, indexNewItem = 0;
@@ -9,8 +9,8 @@ const dataHandlerPopupRepairTypes = () => {
     sizesNavItems = [0],
     prevNavItems = document.getElementById('nav-arrow-popup-repair_left'),
     nextNavItems = document.getElementById('nav-arrow-popup-repair_right'),
-    getData = async (index = 0) => await dataRequest(navItems[index].textContent.trim()),
-    getTypes = async () => await dataRequest(),
+    getData = async (index = 0) => await getItems({ type: navItems[index].textContent.trim() }),
+    getTypes = async () => await getItems(),
     renderNav = () => (async () => {
       const
         navList = popupRepairTypes.querySelector('.nav-list-popup-repair'),

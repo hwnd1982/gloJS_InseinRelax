@@ -1,4 +1,4 @@
-import dataRequest from './dataRequest';
+import { getItems, createNewItem, deleteItem, editItem } from './dataRequest';
 import { cookieState, deleteCookie } from './cookieHandler';
 import formInputHandler from './formInputHandler';
 import loadMessage from './loadMessage';
@@ -71,14 +71,14 @@ const adminPanelHandler = () => {
     formInputHandler();
     (async () => {
       tbody.innerHTML = loadMessage;
-      const types = await dataRequest('GET', '/api/items', {});
+      const types = await getItems();
       if (types) {
         renderTypeItem(types);
-        renderDataTable(await dataRequest('GET', '/api/items', { type: typeItem.value }));
+        renderDataTable(await getItems({ type: typeItem.value }));
       }
     })();
     typeItem.addEventListener('change', async () =>
-      renderDataTable(await dataRequest('GET', '/api/items', { type: typeItem.value })));
+      renderDataTable(await getItems({ type: typeItem.value })));
     document.addEventListener('click', event => {
       const target = event.target;
 
@@ -92,7 +92,7 @@ const adminPanelHandler = () => {
         modal.style.display = 'flex';
         header.textContent = 'Изменение услуги';
         (async () => {
-          const data = await dataRequest('GET', `/api/items/${editID}`, {});
+          const data = await getItems({ id: editID });
           for (const key in data) {
             const input = form.querySelector(`input[name="${key}"]`);
 
@@ -104,14 +104,16 @@ const adminPanelHandler = () => {
         (async () => {
           const value = typeItem.value;
 
-          await dataRequest('DELETE', `/api/items/${target.closest('.table__row').id}`, {});
-          const types = await dataRequest('GET', '/api/items', {});
+          await deleteItem(target.closest('.table__row').id);
+          const types = await getItems();
+
           renderTypeItem(types);
           typeItem.value =  types.includes(value) ? value : 'Все услуги';
-          renderDataTable(await dataRequest('GET', '/api/items', { type: typeItem.value }));
+          renderDataTable(await getItems({ type: typeItem.value }));
         })();
       }
       if (target.closest('.button__close') || target.closest('.button-ui_firm') || target.closest('.cancel-button')) {
+        console.log(target);
         if (!target.closest('.button-ui_firm')) event.preventDefault();
         if (target.closest('.cancel-button')) cleanFormInput();
         modal.style.display = '';
@@ -127,11 +129,11 @@ const adminPanelHandler = () => {
       (async () => {
         const value = typeItem.value;
 
-        if (editID) await dataRequest('PATCH', `/api/items/${editID}`,  body);
-        else await dataRequest('POST', '/api/items',  body);
-        renderTypeItem(await dataRequest('GET', '/api/items', {}));
+        if (editID) await editItem(body, editID);
+        else console.log(await createNewItem(body));
+        renderTypeItem(await getItems());
         typeItem.value = value;
-        renderDataTable(await dataRequest('GET', '/api/items', { type: typeItem.value }));
+        renderDataTable(await getItems({ type: typeItem.value }));
         editID = 0;
         cleanFormInput();
       })();

@@ -2,7 +2,6 @@ const path = require("path"),
   HTMLWebpackPlugin = require("html-webpack-plugin"),
   MiniCssExtractPlugin = require("mini-css-extract-plugin"),
   ImageMinimizerPlugin = require("image-minimizer-webpack-plugin"),
-  CopyWebpackPlugin = require("copy-webpack-plugin"),
   mode = process.env.NODE_ENV,
   isDev = mode === "development",
   generateFilename = (ext) => (isDev ? `[name].${ext}` : `[name].[contenthash].${ext}`);
@@ -35,18 +34,6 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: `./css/${generateFilename("css")}`,
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: "./*.php",
-          to: "./",
-        },
-        {
-          from: "crm-backend",
-          to: "crm-backend",
-        },
-      ],
     }),
     new ImageMinimizerPlugin({
       minimizerOptions: {

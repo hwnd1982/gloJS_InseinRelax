@@ -1,46 +1,59 @@
 import { deleteCookie } from './cookieHandler';
 
-const dataRequest = async (method, request, { type, name, units, cost }) => {
-  try {
-    if (method === 'POST' || method === 'PATCH' || method === 'DELETE') {
-      await fetch(`http://localhost:3000${request}`, {
-        method,
+const request = 'https://eu-central-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/insein-relax-app-jsjas/service/insein-relax-api/incoming_webhook/api?secret=insein-relax';
+
+export const
+  getItems = async query => {
+    const
+      response = await fetch(`${request}${query ? '&' + JSON.stringify(query) : ''}`, {
+        method: 'GET',
+        mode: 'cors',
+      }).catch(() => {
+        throw console.log('Загрузить запись не удалось...'), deleteCookie('admin'), location = './';
+      });
+
+    return await response.json();
+  },
+  createNewItem = async body => {
+    const
+      response = await fetch(request, {
+        method: 'POST',
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ type, name, units, cost })
+        body: JSON.stringify(body)
+      }).catch(() => {
+        throw console.log('Создать новую запись не удалось ...'), deleteCookie('admin'), location = './';
       });
-    }
-    if (method === 'GET') {
-      const
-        response = await fetch(`http://localhost:3000${request}`, {
-          method,
-          mode: 'cors'
-        }).catch(() => { throw console.log('Загрузить данные не удалось...'); }),
-        data = await response.json();
-      if (request === '/api/items')
-        if (type)
-          if (type === 'Все услуги') return data;
-          else return data.reduce((newData, item) => {
-            if (item.type === type) newData.push(item);
 
-            return newData;
-          }, []);
-        else return data.reduce((newData, item) => {
-          if (!newData.includes(item.type)) newData.push(item.type);
+    return await response.json();
+  },
+  deleteItem = async id => {
+    const response = await fetch(`${request}&${JSON.stringify({ id })}`, {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).catch(() => {
+      throw console.log('Удалить запись не удалось...'), deleteCookie('admin'), location = './';
+    });
 
-          return newData;
-        }, []);
-      else return data;
-    }
-  } catch (e) {
-    alert(`Сервер недоступен... Включите сервер:
-      Для запуска админ-панели необходимо запустить файл index.js
-      из папки crm-backend с помощью команды node index`);
-    deleteCookie('admin');
-    throw location = './';
-  }
-};
+    return await response.json();
+  },
+  editItem = async (body, id) => {
+    const
+      response = await fetch(`${request}&${JSON.stringify({ id })}`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body)
+      }).catch(() => {
+        throw console.log('Изменить запись не удалось...'), deleteCookie('admin'), location = './';
+      });
 
-export default dataRequest;
+    return await response.json();
+  };

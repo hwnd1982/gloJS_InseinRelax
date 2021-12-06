@@ -1,22 +1,14 @@
-const dataRequest = async type => {
-  const
-    response = await fetch('./crm-backend/db.json', {
-      method: 'GET',
-      mode: 'same-origin'
-    }),
-    data = await response.json();
-  if (type) return data.reduce((newData, item) => {
-    if (item.type === type) {
-      newData.push(item);
-    }
-    return newData;
-  }, []);
-  else return data.reduce((newData, item) => {
-    if (!newData.includes(item.type)) {
-      newData.push(item.type);
-    }
-    return newData;
-  }, []);
-};
+const request = 'https://eu-central-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/insein-relax-app-jsjas/service/insein-relax-api/incoming_webhook/api?secret=insein-relax';
 
-export default dataRequest;
+export const
+  getItems = async query => {
+    const
+      response = await fetch(`${request}${query ? '&' + JSON.stringify(query) : ''}`, {
+        method: 'GET',
+        mode: 'cors',
+      }).catch(() => {
+        throw console.log('Загрузить запись не удалось...');
+      });
+
+    return await response.json();
+  };
